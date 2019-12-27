@@ -1,0 +1,17 @@
+The Tango-Controls device server for Chronologic xTDC4. Windows 64-bit only.
+
+For information on the device see https://www.cronologic.de/time_measurement/tdc/xtdc4/
+
+The device server implements a (partial) wrapper around proprietary driver xtdc4_driver_64.dll, 
+	enhanced with regular readout of DMA memory and re-parsing of weird output data structures into four separate channels.
+Histogramming might be added in the future.
+	
+Quickstart sequence:
+
+1)Init
+2)Edit attributes
+3)Start
+4)Periodically read the channel spectrum attributes for timestamps. The read timestamps are released from memory.
+5)Stop
+
+Call Off to release xTDC4 for offline use. Call Init to acquire again.
