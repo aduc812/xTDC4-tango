@@ -90,13 +90,11 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\packet_parser.cpp" />
     <ClCompile Include="..\XTDC4.cpp" />
     <ClCompile Include="..\XTDC4Class.cpp" />
     <ClCompile Include="..\XTDC4StateMachine.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\packet_parser.h" />
     <ClInclude Include="..\XTDC4.h">
     </ClInclude>
     <ClInclude Include="..\XTDC4Class.h">

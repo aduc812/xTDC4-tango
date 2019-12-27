@@ -44,6 +44,8 @@ static const char *RcsId = "$Id:  $";
 
 #include <XTDC4.h>
 #include <XTDC4Class.h>
+#include <thread>
+//#include <packet_parser.h>
 
 /*----- PROTECTED REGION END -----*/	//	XTDC4.cpp
 
@@ -90,14 +92,18 @@ static const char *RcsId = "$Id:  $";
 //  TW_END                   |  Tango::DevLong64	Scalar
 //  config_changed           |  Tango::DevBoolean	Scalar
 //  start_trigger_generator  |  Tango::DevBoolean	Scalar
+//  last_run_valid_starts    |  Tango::DevLong	Scalar
+//  last_run_empty_starts    |  Tango::DevLong	Scalar
+//  last_run_hits            |  Tango::DevLong	Scalar
+//  last_run_start_errors    |  Tango::DevLong	Scalar
 //================================================================
 
 namespace XTDC4_ns
 {
 /*----- PROTECTED REGION ID(XTDC4::namespace_starting) ENABLED START -----*/
 //	static initializations
-xtdc4_device * this_device_ref;
-
+	xtdc4_device * this_device_ref;
+//xTDC4_packet_parser * packet_parser;
 /*----- PROTECTED REGION END -----*/	//	XTDC4::namespace_starting
 
 //--------------------------------------------------------
@@ -147,6 +153,8 @@ void XTDC4::delete_device()
 	
 	//	Delete device allocated objects
 	xtdc4_close(this_device_ref);
+	// must terminate the polling thread if still running
+	delete[] attr_error_message_read[0]; // unallocate memory for error message
 
 	/*----- PROTECTED REGION END -----*/	//	XTDC4::delete_device
 	delete[] attr_error_code_read;
@@ -170,6 +178,10 @@ void XTDC4::delete_device()
 	delete[] attr_TW_END_read;
 	delete[] attr_config_changed_read;
 	delete[] attr_start_trigger_generator_read;
+	delete[] attr_last_run_valid_starts_read;
+	delete[] attr_last_run_empty_starts_read;
+	delete[] attr_last_run_hits_read;
+	delete[] attr_last_run_start_errors_read;
 }
 
 //--------------------------------------------------------
@@ -184,7 +196,7 @@ void XTDC4::init_device()
 	/*----- PROTECTED REGION ID(XTDC4::init_device_before) ENABLED START -----*/
 
 	//	Initialization before get_device_property() call
-
+	//packet_parser = new xTDC4_packet_parser(this);
 	/*----- PROTECTED REGION END -----*/	//	XTDC4::init_device_before
 	
 
@@ -212,6 +224,10 @@ void XTDC4::init_device()
 	attr_TW_END_read = new Tango::DevLong64[1];
 	attr_config_changed_read = new Tango::DevBoolean[1];
 	attr_start_trigger_generator_read = new Tango::DevBoolean[1];
+	attr_last_run_valid_starts_read = new Tango::DevLong[1];
+	attr_last_run_empty_starts_read = new Tango::DevLong[1];
+	attr_last_run_hits_read = new Tango::DevLong[1];
+	attr_last_run_start_errors_read = new Tango::DevLong[1];
 	/*----- PROTECTED REGION ID(XTDC4::init_device) ENABLED START -----*/
 
 	//	Initialize device
@@ -228,7 +244,6 @@ void XTDC4::init_device()
 	attr_error_code_read[0] = error_code;
 	attr_error_message_read[0] = new char[255];
 	strcpy_s(attr_error_message_read[0], 255, error_message);
-	attr_device_type_read[0] = xtdc4_get_device_type(this_device_ref);
 	
 	if (error_code != CRONO_OK)
 	{
@@ -238,6 +253,8 @@ void XTDC4::init_device()
 	{
 		set_state(Tango::DevState::ON);
 	}
+	attr_device_type_read[0] = xtdc4_get_device_type(this_device_ref);
+
 	// fill in default config values. When the device is first installed, these will be read.
 	attr_START_RISING_read[0]=0;
 	attr_START_DC_OFFSET_read[0] = 0;
@@ -259,6 +276,11 @@ void XTDC4::init_device()
 	attr_config_changed_read[0] = 1;
 
 	attr_start_trigger_generator_read[0] = 0; // internal trigger disabled at startup
+
+	attr_last_run_valid_starts_read[0] = 0;
+	attr_last_run_empty_starts_read[0] = 0;
+	attr_last_run_hits_read[0] = 0;
+	attr_last_run_start_errors_read[0] = 0;
 	/*----- PROTECTED REGION END -----*/	//	XTDC4::init_device
 }
 
@@ -1130,6 +1152,78 @@ void XTDC4::write_start_trigger_generator(Tango::WAttribute &attr)
 	attr_config_changed_read[0] = 1;
 	/*----- PROTECTED REGION END -----*/	//	XTDC4::write_start_trigger_generator
 }
+//--------------------------------------------------------
+/**
+ *	Read attribute last_run_valid_starts related method
+ *	Description: 
+ *
+ *	Data type:	Tango::DevLong
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void XTDC4::read_last_run_valid_starts(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "XTDC4::read_last_run_valid_starts(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(XTDC4::read_last_run_valid_starts) ENABLED START -----*/
+	//	Set the attribute value
+	attr.set_value(attr_last_run_valid_starts_read);
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::read_last_run_valid_starts
+}
+//--------------------------------------------------------
+/**
+ *	Read attribute last_run_empty_starts related method
+ *	Description: 
+ *
+ *	Data type:	Tango::DevLong
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void XTDC4::read_last_run_empty_starts(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "XTDC4::read_last_run_empty_starts(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(XTDC4::read_last_run_empty_starts) ENABLED START -----*/
+	//	Set the attribute value
+	attr.set_value(attr_last_run_empty_starts_read);
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::read_last_run_empty_starts
+}
+//--------------------------------------------------------
+/**
+ *	Read attribute last_run_hits related method
+ *	Description: 
+ *
+ *	Data type:	Tango::DevLong
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void XTDC4::read_last_run_hits(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "XTDC4::read_last_run_hits(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(XTDC4::read_last_run_hits) ENABLED START -----*/
+	//	Set the attribute value
+	attr.set_value(attr_last_run_hits_read);
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::read_last_run_hits
+}
+//--------------------------------------------------------
+/**
+ *	Read attribute last_run_start_errors related method
+ *	Description: 
+ *
+ *	Data type:	Tango::DevLong
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void XTDC4::read_last_run_start_errors(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "XTDC4::read_last_run_start_errors(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(XTDC4::read_last_run_start_errors) ENABLED START -----*/
+	//	Set the attribute value
+	attr.set_value(attr_last_run_start_errors_read);
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::read_last_run_start_errors
+}
 
 //--------------------------------------------------------
 /**
@@ -1198,9 +1292,23 @@ void XTDC4::start()
 {
 	DEBUG_STREAM << "XTDC4::Start()  - " << device_name << endl;
 	/*----- PROTECTED REGION ID(XTDC4::start) ENABLED START -----*/
+	if (attr_config_changed_read) // apply config before start if changed
+	{
+		apply_config();
+	}
+
+	// reset counters
+	attr_last_run_valid_starts_read[0] = 0;
+	attr_last_run_empty_starts_read[0] = 0;
+	attr_last_run_hits_read[0] = 0;
+	attr_last_run_start_errors_read[0] = 0;
 	
-	//	Add your own code
+	xtdc4_start_tiger(this_device_ref);
+	xtdc4_start_capture(this_device_ref);
+
 	set_state(Tango::DevState::RUNNING);
+	run_poller_thread();
+	
 	/*----- PROTECTED REGION END -----*/	//	XTDC4::start
 }
 //--------------------------------------------------------
@@ -1214,9 +1322,11 @@ void XTDC4::stop()
 {
 	DEBUG_STREAM << "XTDC4::Stop()  - " << device_name << endl;
 	/*----- PROTECTED REGION ID(XTDC4::stop) ENABLED START -----*/
-	
-	//	Add your own code
-	set_state(Tango::DevState::ON);
+	xtdc4_pause_capture(this_device_ref); // pause capture and wait until all data are read by polling thread
+	xtdc4_stop_tiger(this_device_ref);
+
+	set_state(Tango::DevState::STANDBY); //state is changed to ON by polling thread
+	//packet_parser will stop automatically if state is not RUNNING and it runs out of data to parse
 	/*----- PROTECTED REGION END -----*/	//	XTDC4::stop
 }
 //--------------------------------------------------------
@@ -1319,7 +1429,7 @@ void XTDC4::apply_config()
 	if (error_code != CRONO_OK)
 	{
 		attr_error_code_read[0] = error_code;
-		strcpy_s(attr_error_message_read[0], 255, "Could not configure xTDC4");
+		strcpy_s(attr_error_message_read[0], 255, xtdc4_get_last_error_message(this_device_ref));
 		set_state(Tango::DevState::FAULT);
 	}
 	else
@@ -1346,28 +1456,157 @@ void XTDC4::add_dynamic_commands()
 }
 
 /*----- PROTECTED REGION ID(XTDC4::namespace_ending) ENABLED START -----*/
-
 //	Additional Methods
-// //--------------------------------------------------------
-// /**
-//  *	Command Init related method
-//  *	Description: xtdc4 device *xtdc4 init(xtdc4 init parameters *params, int *error code, char **error message)
-//  *               Open and initialize the XTDC4 board with the given index. With error code and error message
-//  *               the user must provide pointers where to buffers where error information should be written by
-//  *               the driver.
-//  *
-//  *	@returns ErrorCode
-//  */
-// //--------------------------------------------------------
-// Tango::DevLong XTDC4::init()
-// {
-// 	Tango::DevLong argout;
-// 	DEBUG_STREAM << "XTDC4::Init()  - " << device_name << endl;
-// 	
-// 	//	Add your own code
-// 	
-// 	return argout;
-// }
+
+void XTDC4::run_poller_thread()
+{
+	std::thread thread_obj(&XTDC4::poller_thread, this);
+	thread_obj.detach();
+}
+
+void XTDC4::poller_thread()
+{
+	std::cout << "Thread launched";
+
+	xtdc4_read_in read_config;
+	// automatically acknowledge all data as processed
+	// on the next call to xtdc4_read()
+	// old packet pointers are invalid after calling xtdc4_read()
+	read_config.acknowledge_last_read = 1;
+	// structure with packet pointers for read data
+	xtdc4_read_out read_data;
+
+	while (true) // run the polling loop
+	{
+
+		int status = xtdc4_read(this_device_ref, &read_config, &read_data);
+		switch (status)
+		{
+		case (CRONO_READ_NO_DATA) :
+		{
+			// no data read.
+			if (state() == Tango::DevState::STANDBY)
+			{ // acquisition is stopped and no more data available. Job done!
+				xtdc4_stop_capture(this_device_ref);
+				set_state(Tango::DevState::ON);
+				std::cout << "Thread stopped";
+				return;
+			}
+		}break;
+		case(CRONO_READ_INTERNAL_ERROR) :
+		{
+			attr_error_code_read[0] = CRONO_INTERNAL_ERROR;
+			strcpy_s(attr_error_message_read[0], 255, xtdc4_get_last_error_message(this_device_ref));
+			set_state(Tango::DevState::FAULT);
+			return;
+		}break;
+		case(CRONO_READ_OK) :
+		{
+			unsigned char package_error_flags_mask = 0x3E;	// TODO:
+			unsigned char hit_error_flags_mask = 0xC0;		// These parameters should not be hardcoded?
+			int max_data_length = 1000000;					//
+
+			crono_packet **first_packet = &read_data.first_packet;
+			crono_packet **last_packet = &read_data.last_packet;
+
+			//check the length of data read
+			if ((last_packet - first_packet) > max_data_length)
+			{
+				//return XTDC4_WRAPPER_DATA_TOO_LONG;
+				//TODO: set some limit on data amount
+			}
+
+			// iterate over all packets from first to last
+			while ((*first_packet) <= (*last_packet))
+			{
+				int bPacketInvalid = 0;
+				crono_packet *p = *first_packet;
+				// a packet with no hits
+				if (p->length == 0)
+				{
+					(attr_last_run_empty_starts_read[0])++;
+					bPacketInvalid = 1;
+				}
+				// a packet with errors
+				if (p->flags&(package_error_flags_mask))
+				{
+					(attr_last_run_start_errors_read[0])++;
+					bPacketInvalid = 1;
+				}
+
+				if (!bPacketInvalid)
+				{
+					int hitcount = 2 * (p->length);
+					if ((p->flags & 0x1) == 1)
+						hitcount -= 1;
+					//if (hitcount > maxhits)
+					//	return XTDC4_WRAPPER_BUFFER_TOO_SMALL; // current 
+					//if (hitcount > maxhits - *number_of_hits)
+					//	return XTDC4_WRAPPER_BUFFER_FULL;
+					unsigned long *packetdata = (unsigned long*)(p->data);
+					//check individual hits for errors
+					if ((hit_error_flags_mask)& 0xf0)
+					{
+						for (int ctr = 0; ctr < hitcount; ctr++)
+						{
+							if (packetdata[ctr] & ((unsigned long)(hit_error_flags_mask) & (unsigned long)0xf0))
+							{
+								(attr_last_run_start_errors_read[0])++; // if one hit is invalid, the whole start package is invalidated
+								bPacketInvalid = 1;
+								break;
+							}
+
+						}
+					}
+
+					if (!bPacketInvalid) // if the packet is valid, copy it to the output
+					{
+						unsigned long rollover_count = 0;
+						int realhitcount = 0;
+						for (int ctr = 0; ctr < hitcount; ctr++)
+						{
+							if ((packetdata[ctr] & (unsigned long)0x2f) == 0x2f)// in the last byte, bit 5 is rollover and bits 0..3 indicate channel 15
+							{
+								rollover_count += 0x01000000;
+							}
+							else
+							{
+								//hits[*number_of_hits + realhitcount] = (packetdata[ctr] >> 8) + rollover_count;//(packetdata[ctr] >> 8)
+								//channels[*number_of_hits + realhitcount] = (unsigned char)(packetdata[ctr] & 0x0f);
+								//start_timestamps[*number_of_hits + realhitcount] = p->timestamp;
+								realhitcount++; // not a rollover event
+							}
+						}
+						if (realhitcount)
+						{
+							(attr_last_run_valid_starts_read[0])++;
+							attr_last_run_hits_read[0] = attr_last_run_hits_read[0] + realhitcount;// update number of hits to be returned				
+						}
+						else
+						{
+							(attr_last_run_empty_starts_read[0])++; // package contained only rollover events
+						}
+
+					}
+				}
+				// go to next packet
+				*first_packet = crono_next_packet(*first_packet);
+
+			}
+		}break;
+
+		}//switch
+		Sleep(100);
+	}
+	return;
+}
+
+
+
+
+
+
+
 
 
 /*----- PROTECTED REGION END -----*/	//	XTDC4::namespace_ending

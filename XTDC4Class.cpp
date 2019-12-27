@@ -1079,6 +1079,102 @@ void XTDC4Class::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	Not Memorized
 	att_list.push_back(start_trigger_generator);
 
+	//	Attribute : last_run_valid_starts
+	last_run_valid_startsAttrib	*last_run_valid_starts = new last_run_valid_startsAttrib();
+	Tango::UserDefaultAttrProp	last_run_valid_starts_prop;
+	//	description	not set for last_run_valid_starts
+	//	label	not set for last_run_valid_starts
+	//	unit	not set for last_run_valid_starts
+	//	standard_unit	not set for last_run_valid_starts
+	//	display_unit	not set for last_run_valid_starts
+	//	format	not set for last_run_valid_starts
+	//	max_value	not set for last_run_valid_starts
+	//	min_value	not set for last_run_valid_starts
+	//	max_alarm	not set for last_run_valid_starts
+	//	min_alarm	not set for last_run_valid_starts
+	//	max_warning	not set for last_run_valid_starts
+	//	min_warning	not set for last_run_valid_starts
+	//	delta_t	not set for last_run_valid_starts
+	//	delta_val	not set for last_run_valid_starts
+	
+	last_run_valid_starts->set_default_properties(last_run_valid_starts_prop);
+	//	Not Polled
+	last_run_valid_starts->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(last_run_valid_starts);
+
+	//	Attribute : last_run_empty_starts
+	last_run_empty_startsAttrib	*last_run_empty_starts = new last_run_empty_startsAttrib();
+	Tango::UserDefaultAttrProp	last_run_empty_starts_prop;
+	//	description	not set for last_run_empty_starts
+	//	label	not set for last_run_empty_starts
+	//	unit	not set for last_run_empty_starts
+	//	standard_unit	not set for last_run_empty_starts
+	//	display_unit	not set for last_run_empty_starts
+	//	format	not set for last_run_empty_starts
+	//	max_value	not set for last_run_empty_starts
+	//	min_value	not set for last_run_empty_starts
+	//	max_alarm	not set for last_run_empty_starts
+	//	min_alarm	not set for last_run_empty_starts
+	//	max_warning	not set for last_run_empty_starts
+	//	min_warning	not set for last_run_empty_starts
+	//	delta_t	not set for last_run_empty_starts
+	//	delta_val	not set for last_run_empty_starts
+	
+	last_run_empty_starts->set_default_properties(last_run_empty_starts_prop);
+	//	Not Polled
+	last_run_empty_starts->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(last_run_empty_starts);
+
+	//	Attribute : last_run_hits
+	last_run_hitsAttrib	*last_run_hits = new last_run_hitsAttrib();
+	Tango::UserDefaultAttrProp	last_run_hits_prop;
+	//	description	not set for last_run_hits
+	//	label	not set for last_run_hits
+	//	unit	not set for last_run_hits
+	//	standard_unit	not set for last_run_hits
+	//	display_unit	not set for last_run_hits
+	//	format	not set for last_run_hits
+	//	max_value	not set for last_run_hits
+	//	min_value	not set for last_run_hits
+	//	max_alarm	not set for last_run_hits
+	//	min_alarm	not set for last_run_hits
+	//	max_warning	not set for last_run_hits
+	//	min_warning	not set for last_run_hits
+	//	delta_t	not set for last_run_hits
+	//	delta_val	not set for last_run_hits
+	
+	last_run_hits->set_default_properties(last_run_hits_prop);
+	//	Not Polled
+	last_run_hits->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(last_run_hits);
+
+	//	Attribute : last_run_start_errors
+	last_run_start_errorsAttrib	*last_run_start_errors = new last_run_start_errorsAttrib();
+	Tango::UserDefaultAttrProp	last_run_start_errors_prop;
+	//	description	not set for last_run_start_errors
+	//	label	not set for last_run_start_errors
+	//	unit	not set for last_run_start_errors
+	//	standard_unit	not set for last_run_start_errors
+	//	display_unit	not set for last_run_start_errors
+	//	format	not set for last_run_start_errors
+	//	max_value	not set for last_run_start_errors
+	//	min_value	not set for last_run_start_errors
+	//	max_alarm	not set for last_run_start_errors
+	//	min_alarm	not set for last_run_start_errors
+	//	max_warning	not set for last_run_start_errors
+	//	min_warning	not set for last_run_start_errors
+	//	delta_t	not set for last_run_start_errors
+	//	delta_val	not set for last_run_start_errors
+	
+	last_run_start_errors->set_default_properties(last_run_start_errors_prop);
+	//	Not Polled
+	last_run_start_errors->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(last_run_start_errors);
+
 
 	//	Create a list of static attributes
 	create_static_attribute_list(get_class_attr()->get_attr_list());

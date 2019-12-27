@@ -46,6 +46,7 @@ static const char *RcsId = "$Id:  $";
 //  RUNNING  |  
 //  OFF      |  
 //  FAULT    |  
+//  STANDBY  |  
 
 
 namespace XTDC4_ns
@@ -458,6 +459,70 @@ bool XTDC4::is_start_trigger_generator_allowed(TANGO_UNUSED(Tango::AttReqType ty
 	return true;
 }
 
+//--------------------------------------------------------
+/**
+ *	Method      : XTDC4::is_last_run_valid_starts_allowed()
+ *	Description : Execution allowed for last_run_valid_starts attribute
+ */
+//--------------------------------------------------------
+bool XTDC4::is_last_run_valid_starts_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for last_run_valid_starts attribute in read access.
+	/*----- PROTECTED REGION ID(XTDC4::last_run_valid_startsStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::last_run_valid_startsStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : XTDC4::is_last_run_empty_starts_allowed()
+ *	Description : Execution allowed for last_run_empty_starts attribute
+ */
+//--------------------------------------------------------
+bool XTDC4::is_last_run_empty_starts_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for last_run_empty_starts attribute in read access.
+	/*----- PROTECTED REGION ID(XTDC4::last_run_empty_startsStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::last_run_empty_startsStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : XTDC4::is_last_run_hits_allowed()
+ *	Description : Execution allowed for last_run_hits attribute
+ */
+//--------------------------------------------------------
+bool XTDC4::is_last_run_hits_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for last_run_hits attribute in read access.
+	/*----- PROTECTED REGION ID(XTDC4::last_run_hitsStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::last_run_hitsStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : XTDC4::is_last_run_start_errors_allowed()
+ *	Description : Execution allowed for last_run_start_errors attribute
+ */
+//--------------------------------------------------------
+bool XTDC4::is_last_run_start_errors_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for last_run_start_errors attribute in read access.
+	/*----- PROTECTED REGION ID(XTDC4::last_run_start_errorsStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::last_run_start_errorsStateAllowed_READ
+	return true;
+}
+
 //=================================================
 //		pipe Allowed Methods
 //=================================================
@@ -493,7 +558,10 @@ bool XTDC4::is_Start_allowed(TANGO_UNUSED(const CORBA::Any &any))
 {
 	//	Not any excluded states for Start command.
 	/*----- PROTECTED REGION ID(XTDC4::StartStateAllowed) ENABLED START -----*/
-	
+	if (get_state() == Tango::ON)
+		return true;
+	else
+		return false;
 	/*----- PROTECTED REGION END -----*/	//	XTDC4::StartStateAllowed
 	return true;
 }

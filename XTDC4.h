@@ -60,8 +60,8 @@ class XTDC4 : public TANGO_BASE_CLASS
 {
 
 /*----- PROTECTED REGION ID(XTDC4::Data Members) ENABLED START -----*/
-
-//	Add your own data members
+public:
+	
 
 /*----- PROTECTED REGION END -----*/	//	XTDC4::Data Members
 
@@ -106,6 +106,10 @@ public:
 	Tango::DevLong64	*attr_TW_END_read;
 	Tango::DevBoolean	*attr_config_changed_read;
 	Tango::DevBoolean	*attr_start_trigger_generator_read;
+	Tango::DevLong	*attr_last_run_valid_starts_read;
+	Tango::DevLong	*attr_last_run_empty_starts_read;
+	Tango::DevLong	*attr_last_run_hits_read;
+	Tango::DevLong	*attr_last_run_start_errors_read;
 
 //	Constructors and destructors
 public:
@@ -380,6 +384,42 @@ public:
 	virtual void read_start_trigger_generator(Tango::Attribute &attr);
 	virtual void write_start_trigger_generator(Tango::WAttribute &attr);
 	virtual bool is_start_trigger_generator_allowed(Tango::AttReqType type);
+/**
+ *	Attribute last_run_valid_starts related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevLong
+ *	Attr type:	Scalar
+ */
+	virtual void read_last_run_valid_starts(Tango::Attribute &attr);
+	virtual bool is_last_run_valid_starts_allowed(Tango::AttReqType type);
+/**
+ *	Attribute last_run_empty_starts related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevLong
+ *	Attr type:	Scalar
+ */
+	virtual void read_last_run_empty_starts(Tango::Attribute &attr);
+	virtual bool is_last_run_empty_starts_allowed(Tango::AttReqType type);
+/**
+ *	Attribute last_run_hits related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevLong
+ *	Attr type:	Scalar
+ */
+	virtual void read_last_run_hits(Tango::Attribute &attr);
+	virtual bool is_last_run_hits_allowed(Tango::AttReqType type);
+/**
+ *	Attribute last_run_start_errors related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevLong
+ *	Attr type:	Scalar
+ */
+	virtual void read_last_run_start_errors(Tango::Attribute &attr);
+	virtual bool is_last_run_start_errors_allowed(Tango::AttReqType type);
 
 
 	//--------------------------------------------------------
@@ -440,8 +480,8 @@ public:
 
 /*----- PROTECTED REGION ID(XTDC4::Additional Method prototypes) ENABLED START -----*/
 
-//	Additional Method prototypes
-
+	void poller_thread(); // this function is run in a separate thread continuously checking for data when running
+	void run_poller_thread(); // this is to run the thread above
 /*----- PROTECTED REGION END -----*/	//	XTDC4::Additional Method prototypes
 };
 

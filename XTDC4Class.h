@@ -366,6 +366,58 @@ public:
 		{return (static_cast<XTDC4 *>(dev))->is_start_trigger_generator_allowed(ty);}
 };
 
+//	Attribute last_run_valid_starts class definition
+class last_run_valid_startsAttrib: public Tango::Attr
+{
+public:
+	last_run_valid_startsAttrib():Attr("last_run_valid_starts",
+			Tango::DEV_LONG, Tango::READ) {};
+	~last_run_valid_startsAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<XTDC4 *>(dev))->read_last_run_valid_starts(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<XTDC4 *>(dev))->is_last_run_valid_starts_allowed(ty);}
+};
+
+//	Attribute last_run_empty_starts class definition
+class last_run_empty_startsAttrib: public Tango::Attr
+{
+public:
+	last_run_empty_startsAttrib():Attr("last_run_empty_starts",
+			Tango::DEV_LONG, Tango::READ) {};
+	~last_run_empty_startsAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<XTDC4 *>(dev))->read_last_run_empty_starts(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<XTDC4 *>(dev))->is_last_run_empty_starts_allowed(ty);}
+};
+
+//	Attribute last_run_hits class definition
+class last_run_hitsAttrib: public Tango::Attr
+{
+public:
+	last_run_hitsAttrib():Attr("last_run_hits",
+			Tango::DEV_LONG, Tango::READ) {};
+	~last_run_hitsAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<XTDC4 *>(dev))->read_last_run_hits(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<XTDC4 *>(dev))->is_last_run_hits_allowed(ty);}
+};
+
+//	Attribute last_run_start_errors class definition
+class last_run_start_errorsAttrib: public Tango::Attr
+{
+public:
+	last_run_start_errorsAttrib():Attr("last_run_start_errors",
+			Tango::DEV_LONG, Tango::READ) {};
+	~last_run_start_errorsAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<XTDC4 *>(dev))->read_last_run_start_errors(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<XTDC4 *>(dev))->is_last_run_start_errors_allowed(ty);}
+};
+
 
 //=========================================
 //	Define classes for pipes

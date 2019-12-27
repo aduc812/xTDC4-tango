@@ -4,14 +4,12 @@
     <ClCompile Include="..\XTDC4.cpp" />
     <ClCompile Include="..\XTDC4Class.cpp" />
     <ClCompile Include="..\XTDC4StateMachine.cpp" />
-    <ClCompile Include="..\packet_parser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\XTDC4.h">
     </ClInclude>
     <ClInclude Include="..\XTDC4Class.h">
     </ClInclude>
-    <ClInclude Include="..\packet_parser.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
