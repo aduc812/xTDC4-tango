@@ -523,26 +523,70 @@ bool XTDC4::is_last_run_start_errors_allowed(TANGO_UNUSED(Tango::AttReqType type
 	return true;
 }
 
-//=================================================
-//		pipe Allowed Methods
-//=================================================
 //--------------------------------------------------------
 /**
- *	Method      : XTDC4::is_Timestamps_allowed()
- *	Description : Execution allowed for Timestamps pipe
+ *	Method      : XTDC4::is_CH0_Timestamps_allowed()
+ *	Description : Execution allowed for CH0_Timestamps attribute
  */
 //--------------------------------------------------------
-bool XTDC4::is_Timestamps_allowed(TANGO_UNUSED(Tango::PipeReqType type))
+bool XTDC4::is_CH0_Timestamps_allowed(TANGO_UNUSED(Tango::AttReqType type))
 {
-	//	Not any excluded states for Timestamps pipe in read access.
-	/*----- PROTECTED REGION ID(XTDC4::TimestampsStateAllowed_READ) ENABLED START -----*/
-	if (get_state() == Tango::RUNNING)
-	     return true;
-	else
-		 return false;
-	/*----- PROTECTED REGION END -----*/	//	XTDC4::TimestampsStateAllowed_READ
+
+	//	Not any excluded states for CH0_Timestamps attribute in read access.
+	/*----- PROTECTED REGION ID(XTDC4::CH0_TimestampsStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::CH0_TimestampsStateAllowed_READ
 	return true;
 }
+
+//--------------------------------------------------------
+/**
+ *	Method      : XTDC4::is_CH1_Timestamps_allowed()
+ *	Description : Execution allowed for CH1_Timestamps attribute
+ */
+//--------------------------------------------------------
+bool XTDC4::is_CH1_Timestamps_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for CH1_Timestamps attribute in read access.
+	/*----- PROTECTED REGION ID(XTDC4::CH1_TimestampsStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::CH1_TimestampsStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : XTDC4::is_CH2_Timestamps_allowed()
+ *	Description : Execution allowed for CH2_Timestamps attribute
+ */
+//--------------------------------------------------------
+bool XTDC4::is_CH2_Timestamps_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for CH2_Timestamps attribute in read access.
+	/*----- PROTECTED REGION ID(XTDC4::CH2_TimestampsStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::CH2_TimestampsStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : XTDC4::is_CH3_Timestamps_allowed()
+ *	Description : Execution allowed for CH3_Timestamps attribute
+ */
+//--------------------------------------------------------
+bool XTDC4::is_CH3_Timestamps_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for CH3_Timestamps attribute in read access.
+	/*----- PROTECTED REGION ID(XTDC4::CH3_TimestampsStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::CH3_TimestampsStateAllowed_READ
+	return true;
+}
+
 
 //=================================================
 //		Commands Allowed Methods

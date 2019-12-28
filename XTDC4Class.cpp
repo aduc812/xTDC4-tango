@@ -1175,6 +1175,102 @@ void XTDC4Class::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	Not Memorized
 	att_list.push_back(last_run_start_errors);
 
+	//	Attribute : CH0_Timestamps
+	CH0_TimestampsAttrib	*ch0_timestamps = new CH0_TimestampsAttrib();
+	Tango::UserDefaultAttrProp	ch0_timestamps_prop;
+	//	description	not set for CH0_Timestamps
+	//	label	not set for CH0_Timestamps
+	//	unit	not set for CH0_Timestamps
+	//	standard_unit	not set for CH0_Timestamps
+	//	display_unit	not set for CH0_Timestamps
+	//	format	not set for CH0_Timestamps
+	//	max_value	not set for CH0_Timestamps
+	//	min_value	not set for CH0_Timestamps
+	//	max_alarm	not set for CH0_Timestamps
+	//	min_alarm	not set for CH0_Timestamps
+	//	max_warning	not set for CH0_Timestamps
+	//	min_warning	not set for CH0_Timestamps
+	//	delta_t	not set for CH0_Timestamps
+	//	delta_val	not set for CH0_Timestamps
+	
+	ch0_timestamps->set_default_properties(ch0_timestamps_prop);
+	//	Not Polled
+	ch0_timestamps->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(ch0_timestamps);
+
+	//	Attribute : CH1_Timestamps
+	CH1_TimestampsAttrib	*ch1_timestamps = new CH1_TimestampsAttrib();
+	Tango::UserDefaultAttrProp	ch1_timestamps_prop;
+	//	description	not set for CH1_Timestamps
+	//	label	not set for CH1_Timestamps
+	//	unit	not set for CH1_Timestamps
+	//	standard_unit	not set for CH1_Timestamps
+	//	display_unit	not set for CH1_Timestamps
+	//	format	not set for CH1_Timestamps
+	//	max_value	not set for CH1_Timestamps
+	//	min_value	not set for CH1_Timestamps
+	//	max_alarm	not set for CH1_Timestamps
+	//	min_alarm	not set for CH1_Timestamps
+	//	max_warning	not set for CH1_Timestamps
+	//	min_warning	not set for CH1_Timestamps
+	//	delta_t	not set for CH1_Timestamps
+	//	delta_val	not set for CH1_Timestamps
+	
+	ch1_timestamps->set_default_properties(ch1_timestamps_prop);
+	//	Not Polled
+	ch1_timestamps->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(ch1_timestamps);
+
+	//	Attribute : CH2_Timestamps
+	CH2_TimestampsAttrib	*ch2_timestamps = new CH2_TimestampsAttrib();
+	Tango::UserDefaultAttrProp	ch2_timestamps_prop;
+	//	description	not set for CH2_Timestamps
+	//	label	not set for CH2_Timestamps
+	//	unit	not set for CH2_Timestamps
+	//	standard_unit	not set for CH2_Timestamps
+	//	display_unit	not set for CH2_Timestamps
+	//	format	not set for CH2_Timestamps
+	//	max_value	not set for CH2_Timestamps
+	//	min_value	not set for CH2_Timestamps
+	//	max_alarm	not set for CH2_Timestamps
+	//	min_alarm	not set for CH2_Timestamps
+	//	max_warning	not set for CH2_Timestamps
+	//	min_warning	not set for CH2_Timestamps
+	//	delta_t	not set for CH2_Timestamps
+	//	delta_val	not set for CH2_Timestamps
+	
+	ch2_timestamps->set_default_properties(ch2_timestamps_prop);
+	//	Not Polled
+	ch2_timestamps->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(ch2_timestamps);
+
+	//	Attribute : CH3_Timestamps
+	CH3_TimestampsAttrib	*ch3_timestamps = new CH3_TimestampsAttrib();
+	Tango::UserDefaultAttrProp	ch3_timestamps_prop;
+	//	description	not set for CH3_Timestamps
+	//	label	not set for CH3_Timestamps
+	//	unit	not set for CH3_Timestamps
+	//	standard_unit	not set for CH3_Timestamps
+	//	display_unit	not set for CH3_Timestamps
+	//	format	not set for CH3_Timestamps
+	//	max_value	not set for CH3_Timestamps
+	//	min_value	not set for CH3_Timestamps
+	//	max_alarm	not set for CH3_Timestamps
+	//	min_alarm	not set for CH3_Timestamps
+	//	max_warning	not set for CH3_Timestamps
+	//	min_warning	not set for CH3_Timestamps
+	//	delta_t	not set for CH3_Timestamps
+	//	delta_val	not set for CH3_Timestamps
+	
+	ch3_timestamps->set_default_properties(ch3_timestamps_prop);
+	//	Not Polled
+	ch3_timestamps->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(ch3_timestamps);
+
 
 	//	Create a list of static attributes
 	create_static_attribute_list(get_class_attr()->get_attr_list());
@@ -1198,13 +1294,6 @@ void XTDC4Class::pipe_factory()
 	//	Add your own code
 	
 	/*----- PROTECTED REGION END -----*/	//	XTDC4Class::pipe_factory_before
-	Tango::UserDefaultPipeProp udpp;
-	TimestampsClass	*pTimestamps = new TimestampsClass("Timestamps",Tango::OPERATOR);
-	udpp.set_description("A stream of timestampos recorded while running");
-	udpp.set_label("");
-	pTimestamps->set_default_properties(udpp);
-	pipe_list.push_back(pTimestamps);
-
 	/*----- PROTECTED REGION ID(XTDC4Class::pipe_factory_after) ENABLED START -----*/
 	
 	//	Add your own code

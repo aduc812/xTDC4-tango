@@ -418,23 +418,56 @@ public:
 		{return (static_cast<XTDC4 *>(dev))->is_last_run_start_errors_allowed(ty);}
 };
 
-
-//=========================================
-//	Define classes for pipes
-//=========================================
-//	Pipe Timestamps class definition
-class TimestampsClass: public Tango::Pipe
+//	Attribute CH0_Timestamps class definition
+class CH0_TimestampsAttrib: public Tango::SpectrumAttr
 {
 public:
-	TimestampsClass(const string &name, Tango::DispLevel level)
-		:Pipe(name, level) {};
+	CH0_TimestampsAttrib():SpectrumAttr("CH0_Timestamps",
+			Tango::DEV_ULONG64, Tango::READ, 10000000) {};
+	~CH0_TimestampsAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<XTDC4 *>(dev))->read_CH0_Timestamps(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<XTDC4 *>(dev))->is_CH0_Timestamps_allowed(ty);}
+};
 
-	~TimestampsClass() {};
+//	Attribute CH1_Timestamps class definition
+class CH1_TimestampsAttrib: public Tango::SpectrumAttr
+{
+public:
+	CH1_TimestampsAttrib():SpectrumAttr("CH1_Timestamps",
+			Tango::DEV_ULONG64, Tango::READ, 10000000) {};
+	~CH1_TimestampsAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<XTDC4 *>(dev))->read_CH1_Timestamps(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<XTDC4 *>(dev))->is_CH1_Timestamps_allowed(ty);}
+};
 
-	virtual bool is_allowed (Tango::DeviceImpl *dev,Tango::PipeReqType _prt)
-		{return (static_cast<XTDC4 *>(dev))->is_Timestamps_allowed(_prt);}
-	virtual void read(Tango::DeviceImpl *dev)
-		{(static_cast<XTDC4 *>(dev))->read_Timestamps(*this);}
+//	Attribute CH2_Timestamps class definition
+class CH2_TimestampsAttrib: public Tango::SpectrumAttr
+{
+public:
+	CH2_TimestampsAttrib():SpectrumAttr("CH2_Timestamps",
+			Tango::DEV_ULONG64, Tango::READ, 10000000) {};
+	~CH2_TimestampsAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<XTDC4 *>(dev))->read_CH2_Timestamps(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<XTDC4 *>(dev))->is_CH2_Timestamps_allowed(ty);}
+};
+
+//	Attribute CH3_Timestamps class definition
+class CH3_TimestampsAttrib: public Tango::SpectrumAttr
+{
+public:
+	CH3_TimestampsAttrib():SpectrumAttr("CH3_Timestamps",
+			Tango::DEV_ULONG64, Tango::READ, 10000000) {};
+	~CH3_TimestampsAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<XTDC4 *>(dev))->read_CH3_Timestamps(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<XTDC4 *>(dev))->is_CH3_Timestamps_allowed(ty);}
 };
 
 

@@ -39,6 +39,9 @@
 #define XTDC4_H
 
 #include <tango.h>
+#include <queue>
+
+
 
 
 /*----- PROTECTED REGION END -----*/	//	XTDC4.h
@@ -54,14 +57,16 @@ namespace XTDC4_ns
 
 //	Additional Class Declarations
 
+typedef std::vector<__int64> datachunk;
+
 /*----- PROTECTED REGION END -----*/	//	XTDC4::Additional Class Declarations
 
 class XTDC4 : public TANGO_BASE_CLASS
 {
 
 /*----- PROTECTED REGION ID(XTDC4::Data Members) ENABLED START -----*/
-public:
-	
+private:
+
 
 /*----- PROTECTED REGION END -----*/	//	XTDC4::Data Members
 
@@ -110,6 +115,10 @@ public:
 	Tango::DevLong	*attr_last_run_empty_starts_read;
 	Tango::DevLong	*attr_last_run_hits_read;
 	Tango::DevLong	*attr_last_run_start_errors_read;
+	Tango::DevULong64	*attr_CH0_Timestamps_read;
+	Tango::DevULong64	*attr_CH1_Timestamps_read;
+	Tango::DevULong64	*attr_CH2_Timestamps_read;
+	Tango::DevULong64	*attr_CH3_Timestamps_read;
 
 //	Constructors and destructors
 public:
@@ -420,6 +429,42 @@ public:
  */
 	virtual void read_last_run_start_errors(Tango::Attribute &attr);
 	virtual bool is_last_run_start_errors_allowed(Tango::AttReqType type);
+/**
+ *	Attribute CH0_Timestamps related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevULong64
+ *	Attr type:	Spectrum max = 10000000
+ */
+	virtual void read_CH0_Timestamps(Tango::Attribute &attr);
+	virtual bool is_CH0_Timestamps_allowed(Tango::AttReqType type);
+/**
+ *	Attribute CH1_Timestamps related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevULong64
+ *	Attr type:	Spectrum max = 10000000
+ */
+	virtual void read_CH1_Timestamps(Tango::Attribute &attr);
+	virtual bool is_CH1_Timestamps_allowed(Tango::AttReqType type);
+/**
+ *	Attribute CH2_Timestamps related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevULong64
+ *	Attr type:	Spectrum max = 10000000
+ */
+	virtual void read_CH2_Timestamps(Tango::Attribute &attr);
+	virtual bool is_CH2_Timestamps_allowed(Tango::AttReqType type);
+/**
+ *	Attribute CH3_Timestamps related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevULong64
+ *	Attr type:	Spectrum max = 10000000
+ */
+	virtual void read_CH3_Timestamps(Tango::Attribute &attr);
+	virtual bool is_CH3_Timestamps_allowed(Tango::AttReqType type);
 
 
 	//--------------------------------------------------------
@@ -432,11 +477,6 @@ public:
 
 
 
-//	pipe related methods
-public:
-	//	Pipe Timestamps
-	bool is_Timestamps_allowed(Tango::PipeReqType);
-	void read_Timestamps(Tango::Pipe &);
 
 //	Command related methods
 public:
@@ -482,6 +522,8 @@ public:
 
 	void poller_thread(); // this function is run in a separate thread continuously checking for data when running
 	void run_poller_thread(); // this is to run the thread above
+
+	void prepare_channel_timestamps_to_send(unsigned char channel, Tango::DevULong64 *attr_CH_Timestamps_read, unsigned long * number_of_timestamps_prepared);
 /*----- PROTECTED REGION END -----*/	//	XTDC4::Additional Method prototypes
 };
 
