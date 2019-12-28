@@ -1,17 +1,22 @@
 The Tango-Controls device server for Chronologic xTDC4. Windows 64-bit only.
-
 For information on the device see https://www.cronologic.de/time_measurement/tdc/xtdc4/
+Pogo used to generate class template.
 
 The device server implements a (partial) wrapper around proprietary driver xtdc4_driver_64.dll, 
-	enhanced with regular readout of DMA memory and re-parsing of weird output data structures into four separate channels.
+	enhanced with regular readout of DMA memory and re-parsing of weird output data structures into timestamps on four separate channels.
 Histogramming might be added in the future.
 	
 Quickstart sequence:
 
 1)Init
-2)Edit attributes
+2)Edit setup attributes
 3)Start
 4)Periodically read the channel spectrum attributes for timestamps. The read timestamps are released from memory.
 5)Stop
 
-Call Off to release xTDC4 for offline use. Call Init to acquire again.
+Call Off to release xTDC4 for offline use. Call Init to acquire again.          
+
+When idle, the device state is ON.
+When started (state set to RUNNING), the dedicated polling thread starts reading the DMA memory, parsing timestamps into std::vector object. One vector is created per channel every 100ms (hardcoded polling period). The pointers to those vectors are stored in an std::queue object.
+When client reads CHx_Timestamps attribure, the vectors (all but the last one to prevent racing conditions) are popped from a queue, and their contents are written into a CHx_Timestamps attribute array. The vectors themselves are destroyed to free memory.
+When stopped (state set to STANDBY), the acquisition stops but polling thread still runs until DMA memory is empty. Then the thread sets the state to ON and exits. After that, the client has to read again the CHx_Timestamps attribure to fetch the remaining data.                                  
