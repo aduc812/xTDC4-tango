@@ -73,35 +73,36 @@ static const char *RcsId = "$Id:  $";
 //================================================================
 //  Attributes managed are:
 //================================================================
-//  error_code               |  Tango::DevLong	Scalar
-//  error_message            |  Tango::DevString	Scalar
-//  device_type              |  Tango::DevShort	Scalar
-//  START_RISING             |  Tango::DevBoolean	Scalar
-//  START_DC_OFFSET          |  Tango::DevDouble	Scalar
-//  CH0_ENABLED              |  Tango::DevBoolean	Scalar
-//  CH0_RISING               |  Tango::DevBoolean	Scalar
-//  CH0_DC_OFFSET            |  Tango::DevDouble	Scalar
-//  CH1_ENABLED              |  Tango::DevBoolean	Scalar
-//  CH1_RISING               |  Tango::DevBoolean	Scalar
-//  CH1_DC_OFFSET            |  Tango::DevDouble	Scalar
-//  CH2_ENABLED              |  Tango::DevBoolean	Scalar
-//  CH2_RISING               |  Tango::DevBoolean	Scalar
-//  CH2_DC_OFFSET            |  Tango::DevDouble	Scalar
-//  CH3_ENABLED              |  Tango::DevBoolean	Scalar
-//  CH3_RISING               |  Tango::DevBoolean	Scalar
-//  CH3_DC_OFFSET            |  Tango::DevDouble	Scalar
-//  TW_START                 |  Tango::DevLong64	Scalar
-//  TW_END                   |  Tango::DevLong64	Scalar
-//  config_changed           |  Tango::DevBoolean	Scalar
-//  start_trigger_generator  |  Tango::DevBoolean	Scalar
-//  last_run_valid_starts    |  Tango::DevLong	Scalar
-//  last_run_empty_starts    |  Tango::DevLong	Scalar
-//  last_run_hits            |  Tango::DevLong	Scalar
-//  last_run_start_errors    |  Tango::DevLong	Scalar
-//  CH0_Timestamps           |  Tango::DevULong64	Spectrum  ( max = 10000000)
-//  CH1_Timestamps           |  Tango::DevULong64	Spectrum  ( max = 10000000)
-//  CH2_Timestamps           |  Tango::DevULong64	Spectrum  ( max = 10000000)
-//  CH3_Timestamps           |  Tango::DevULong64	Spectrum  ( max = 10000000)
+//  error_code                         |  Tango::DevLong	Scalar
+//  error_message                      |  Tango::DevString	Scalar
+//  device_type                        |  Tango::DevShort	Scalar
+//  START_RISING                       |  Tango::DevBoolean	Scalar
+//  START_DC_OFFSET                    |  Tango::DevDouble	Scalar
+//  CH0_ENABLED                        |  Tango::DevBoolean	Scalar
+//  CH0_RISING                         |  Tango::DevBoolean	Scalar
+//  CH0_DC_OFFSET                      |  Tango::DevDouble	Scalar
+//  CH1_ENABLED                        |  Tango::DevBoolean	Scalar
+//  CH1_RISING                         |  Tango::DevBoolean	Scalar
+//  CH1_DC_OFFSET                      |  Tango::DevDouble	Scalar
+//  CH2_ENABLED                        |  Tango::DevBoolean	Scalar
+//  CH2_RISING                         |  Tango::DevBoolean	Scalar
+//  CH2_DC_OFFSET                      |  Tango::DevDouble	Scalar
+//  CH3_ENABLED                        |  Tango::DevBoolean	Scalar
+//  CH3_RISING                         |  Tango::DevBoolean	Scalar
+//  CH3_DC_OFFSET                      |  Tango::DevDouble	Scalar
+//  TW_START                           |  Tango::DevLong64	Scalar
+//  TW_END                             |  Tango::DevLong64	Scalar
+//  config_changed                     |  Tango::DevBoolean	Scalar
+//  start_trigger_generator            |  Tango::DevBoolean	Scalar
+//  last_run_valid_starts              |  Tango::DevLong	Scalar
+//  last_run_empty_starts              |  Tango::DevLong	Scalar
+//  last_run_hits                      |  Tango::DevLong	Scalar
+//  last_run_start_errors              |  Tango::DevLong	Scalar
+//  start_trigger_generator_frequency  |  Tango::DevLong	Scalar
+//  CH0_Timestamps                     |  Tango::DevULong64	Spectrum  ( max = 10000000)
+//  CH1_Timestamps                     |  Tango::DevULong64	Spectrum  ( max = 10000000)
+//  CH2_Timestamps                     |  Tango::DevULong64	Spectrum  ( max = 10000000)
+//  CH3_Timestamps                     |  Tango::DevULong64	Spectrum  ( max = 10000000)
 //================================================================
 
 namespace XTDC4_ns
@@ -223,6 +224,7 @@ void XTDC4::delete_device()
 	delete[] attr_last_run_empty_starts_read;
 	delete[] attr_last_run_hits_read;
 	delete[] attr_last_run_start_errors_read;
+	delete[] attr_start_trigger_generator_frequency_read;
 	delete[] attr_CH0_Timestamps_read;
 	delete[] attr_CH1_Timestamps_read;
 	delete[] attr_CH2_Timestamps_read;
@@ -273,6 +275,7 @@ void XTDC4::init_device()
 	attr_last_run_empty_starts_read = new Tango::DevLong[1];
 	attr_last_run_hits_read = new Tango::DevLong[1];
 	attr_last_run_start_errors_read = new Tango::DevLong[1];
+	attr_start_trigger_generator_frequency_read = new Tango::DevLong[1];
 	attr_CH0_Timestamps_read = new Tango::DevULong64[10000000];
 	attr_CH1_Timestamps_read = new Tango::DevULong64[10000000];
 	attr_CH2_Timestamps_read = new Tango::DevULong64[10000000];
@@ -325,6 +328,7 @@ void XTDC4::init_device()
 	attr_config_changed_read[0] = 1;
 
 	attr_start_trigger_generator_read[0] = 0; // internal trigger disabled at startup
+	attr_start_trigger_generator_frequency_read[0] = 2000; // 2kHz default 
 
 	attr_last_run_valid_starts_read[0] = 0;
 	attr_last_run_empty_starts_read[0] = 0;
@@ -1166,7 +1170,7 @@ void XTDC4::read_config_changed(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute start_trigger_generator related method
- *	Description: Whether to use an internal trigger generator. Currently hardcoded to 2 kHz start with 13.2 ns width positive TTL logic. If TRUE, START becomes an output
+ *	Description: Whether to use an internal trigger generator. Frequency controlled by another attribute. Currently hardcoded to 13.2 ns width positive TTL logic. If TRUE, START becomes an output
  *
  *	Data type:	Tango::DevBoolean
  *	Attr type:	Scalar
@@ -1184,7 +1188,7 @@ void XTDC4::read_start_trigger_generator(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Write attribute start_trigger_generator related method
- *	Description: Whether to use an internal trigger generator. Currently hardcoded to 2 kHz start with 13.2 ns width positive TTL logic. If TRUE, START becomes an output
+ *	Description: Whether to use an internal trigger generator. Frequency controlled by another attribute. Currently hardcoded to 13.2 ns width positive TTL logic. If TRUE, START becomes an output
  *
  *	Data type:	Tango::DevBoolean
  *	Attr type:	Scalar
@@ -1272,6 +1276,45 @@ void XTDC4::read_last_run_start_errors(Tango::Attribute &attr)
 	attr.set_value(attr_last_run_start_errors_read);
 	
 	/*----- PROTECTED REGION END -----*/	//	XTDC4::read_last_run_start_errors
+}
+//--------------------------------------------------------
+/**
+ *	Read attribute start_trigger_generator_frequency related method
+ *	Description: Frequency of internal trigger, in Hz
+ *
+ *	Data type:	Tango::DevLong
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void XTDC4::read_start_trigger_generator_frequency(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "XTDC4::read_start_trigger_generator_frequency(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(XTDC4::read_start_trigger_generator_frequency) ENABLED START -----*/
+	//	Set the attribute value
+	attr.set_value(attr_start_trigger_generator_frequency_read);
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::read_start_trigger_generator_frequency
+}
+//--------------------------------------------------------
+/**
+ *	Write attribute start_trigger_generator_frequency related method
+ *	Description: Frequency of internal trigger, in Hz
+ *
+ *	Data type:	Tango::DevLong
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void XTDC4::write_start_trigger_generator_frequency(Tango::WAttribute &attr)
+{
+	DEBUG_STREAM << "XTDC4::write_start_trigger_generator_frequency(Tango::WAttribute &attr) entering... " << endl;
+	//	Retrieve write value
+	Tango::DevLong	w_val;
+	attr.get_write_value(w_val);
+	/*----- PROTECTED REGION ID(XTDC4::write_start_trigger_generator_frequency) ENABLED START -----*/
+	attr_start_trigger_generator_frequency_read[0] = w_val;
+	attr_config_changed_read[0] = 1;
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::write_start_trigger_generator_frequency
 }
 //--------------------------------------------------------
 /**
@@ -1485,7 +1528,7 @@ void XTDC4::apply_config()
 	// of interest have to be set explicitly
 	xtdc4_get_default_configuration(this_device_ref, &config);
 
-	// reset TDC time counter on falling edge of start pulse
+	// reset TDC time counter on respective edge of start pulse
 	config.start_rising = attr_START_RISING_read[0];
 	config.dc_offset[0] = attr_START_DC_OFFSET_read[0]; // DC offset[0] is start, [1] is ch0, etc
 
@@ -1523,9 +1566,11 @@ void XTDC4::apply_config()
 	config.trigger[0].falling = config.start_rising ? 0 : 1;
 
 
+	
+	double start_trigger_generator_period = 1.0 / attr_start_trigger_generator_frequency_read[0];
 	// 750 = 200 kHz
 	// 75000 = 2 kHz
-	config.auto_trigger_period = 75000;
+	config.auto_trigger_period = (int)floor(start_trigger_generator_period * 150000000);
 	config.auto_trigger_random_exponent = 0;
 
 	// setup TiGeR

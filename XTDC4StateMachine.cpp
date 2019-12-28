@@ -525,6 +525,26 @@ bool XTDC4::is_last_run_start_errors_allowed(TANGO_UNUSED(Tango::AttReqType type
 
 //--------------------------------------------------------
 /**
+ *	Method      : XTDC4::is_start_trigger_generator_frequency_allowed()
+ *	Description : Execution allowed for start_trigger_generator_frequency attribute
+ */
+//--------------------------------------------------------
+bool XTDC4::is_start_trigger_generator_frequency_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+	//	Not any excluded states for start_trigger_generator_frequency attribute in Write access.
+	/*----- PROTECTED REGION ID(XTDC4::start_trigger_generator_frequencyStateAllowed_WRITE) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::start_trigger_generator_frequencyStateAllowed_WRITE
+
+	//	Not any excluded states for start_trigger_generator_frequency attribute in read access.
+	/*----- PROTECTED REGION ID(XTDC4::start_trigger_generator_frequencyStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::start_trigger_generator_frequencyStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
  *	Method      : XTDC4::is_CH0_Timestamps_allowed()
  *	Description : Execution allowed for CH0_Timestamps attribute
  */

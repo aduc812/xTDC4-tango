@@ -1058,7 +1058,7 @@ void XTDC4Class::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	Attribute : start_trigger_generator
 	start_trigger_generatorAttrib	*start_trigger_generator = new start_trigger_generatorAttrib();
 	Tango::UserDefaultAttrProp	start_trigger_generator_prop;
-	start_trigger_generator_prop.set_description("Whether to use an internal trigger generator. Currently hardcoded to 2 kHz start with 13.2 ns width positive TTL logic. If TRUE, START becomes an output");
+	start_trigger_generator_prop.set_description("Whether to use an internal trigger generator. Frequency controlled by another attribute. Currently hardcoded to 13.2 ns width positive TTL logic. If TRUE, START becomes an output");
 	//	label	not set for start_trigger_generator
 	//	unit	not set for start_trigger_generator
 	//	standard_unit	not set for start_trigger_generator
@@ -1174,6 +1174,31 @@ void XTDC4Class::attribute_factory(vector<Tango::Attr *> &att_list)
 	last_run_start_errors->set_disp_level(Tango::OPERATOR);
 	//	Not Memorized
 	att_list.push_back(last_run_start_errors);
+
+	//	Attribute : start_trigger_generator_frequency
+	start_trigger_generator_frequencyAttrib	*start_trigger_generator_frequency = new start_trigger_generator_frequencyAttrib();
+	Tango::UserDefaultAttrProp	start_trigger_generator_frequency_prop;
+	start_trigger_generator_frequency_prop.set_description("Frequency of internal trigger, in Hz");
+	//	label	not set for start_trigger_generator_frequency
+	start_trigger_generator_frequency_prop.set_unit("Hz");
+	//	standard_unit	not set for start_trigger_generator_frequency
+	//	display_unit	not set for start_trigger_generator_frequency
+	//	format	not set for start_trigger_generator_frequency
+	start_trigger_generator_frequency_prop.set_max_value("4000000");
+	start_trigger_generator_frequency_prop.set_min_value("100");
+	//	max_alarm	not set for start_trigger_generator_frequency
+	//	min_alarm	not set for start_trigger_generator_frequency
+	//	max_warning	not set for start_trigger_generator_frequency
+	//	min_warning	not set for start_trigger_generator_frequency
+	//	delta_t	not set for start_trigger_generator_frequency
+	//	delta_val	not set for start_trigger_generator_frequency
+	
+	start_trigger_generator_frequency->set_default_properties(start_trigger_generator_frequency_prop);
+	//	Not Polled
+	start_trigger_generator_frequency->set_disp_level(Tango::OPERATOR);
+	start_trigger_generator_frequency->set_memorized();
+	start_trigger_generator_frequency->set_memorized_init(true);
+	att_list.push_back(start_trigger_generator_frequency);
 
 	//	Attribute : CH0_Timestamps
 	CH0_TimestampsAttrib	*ch0_timestamps = new CH0_TimestampsAttrib();

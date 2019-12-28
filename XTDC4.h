@@ -115,6 +115,7 @@ public:
 	Tango::DevLong	*attr_last_run_empty_starts_read;
 	Tango::DevLong	*attr_last_run_hits_read;
 	Tango::DevLong	*attr_last_run_start_errors_read;
+	Tango::DevLong	*attr_start_trigger_generator_frequency_read;
 	Tango::DevULong64	*attr_CH0_Timestamps_read;
 	Tango::DevULong64	*attr_CH1_Timestamps_read;
 	Tango::DevULong64	*attr_CH2_Timestamps_read;
@@ -385,7 +386,7 @@ public:
 	virtual bool is_config_changed_allowed(Tango::AttReqType type);
 /**
  *	Attribute start_trigger_generator related methods
- *	Description: Whether to use an internal trigger generator. Currently hardcoded to 2 kHz start with 13.2 ns width positive TTL logic. If TRUE, START becomes an output
+ *	Description: Whether to use an internal trigger generator. Frequency controlled by another attribute. Currently hardcoded to 13.2 ns width positive TTL logic. If TRUE, START becomes an output
  *
  *	Data type:	Tango::DevBoolean
  *	Attr type:	Scalar
@@ -429,6 +430,16 @@ public:
  */
 	virtual void read_last_run_start_errors(Tango::Attribute &attr);
 	virtual bool is_last_run_start_errors_allowed(Tango::AttReqType type);
+/**
+ *	Attribute start_trigger_generator_frequency related methods
+ *	Description: Frequency of internal trigger, in Hz
+ *
+ *	Data type:	Tango::DevLong
+ *	Attr type:	Scalar
+ */
+	virtual void read_start_trigger_generator_frequency(Tango::Attribute &attr);
+	virtual void write_start_trigger_generator_frequency(Tango::WAttribute &attr);
+	virtual bool is_start_trigger_generator_frequency_allowed(Tango::AttReqType type);
 /**
  *	Attribute CH0_Timestamps related methods
  *	Description: 

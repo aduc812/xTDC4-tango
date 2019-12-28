@@ -418,6 +418,21 @@ public:
 		{return (static_cast<XTDC4 *>(dev))->is_last_run_start_errors_allowed(ty);}
 };
 
+//	Attribute start_trigger_generator_frequency class definition
+class start_trigger_generator_frequencyAttrib: public Tango::Attr
+{
+public:
+	start_trigger_generator_frequencyAttrib():Attr("start_trigger_generator_frequency",
+			Tango::DEV_LONG, Tango::READ_WRITE) {};
+	~start_trigger_generator_frequencyAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<XTDC4 *>(dev))->read_start_trigger_generator_frequency(att);}
+	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
+		{(static_cast<XTDC4 *>(dev))->write_start_trigger_generator_frequency(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<XTDC4 *>(dev))->is_start_trigger_generator_frequency_allowed(ty);}
+};
+
 //	Attribute CH0_Timestamps class definition
 class CH0_TimestampsAttrib: public Tango::SpectrumAttr
 {
