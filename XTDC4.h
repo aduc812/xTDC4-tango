@@ -117,6 +117,10 @@ public:
 	Tango::DevLong	*attr_last_run_start_errors_read;
 	Tango::DevLong	*attr_start_trigger_generator_frequency_read;
 	Tango::DevDouble	*attr_run_timeout_read;
+	Tango::DevLong	*attr_firmware_revision_read;
+	Tango::DevLong	*attr_driver_version_read;
+	Tango::DevLong	*attr_board_serial_read;
+	Tango::DevDouble	*attr_bin_size_read;
 	Tango::DevULong64	*attr_CH0_Timestamps_read;
 	Tango::DevULong64	*attr_CH1_Timestamps_read;
 	Tango::DevULong64	*attr_CH2_Timestamps_read;
@@ -454,11 +458,55 @@ public:
 	virtual void write_run_timeout(Tango::WAttribute &attr);
 	virtual bool is_run_timeout_allowed(Tango::AttReqType type);
 /**
+ *	Attribute firmware_revision related methods
+ *	Description: Revision number of the FPGA configuration.
+ *
+ *	Data type:	Tango::DevLong
+ *	Attr type:	Scalar
+ */
+	virtual void read_firmware_revision(Tango::Attribute &attr);
+	virtual bool is_firmware_revision_allowed(Tango::AttReqType type);
+/**
+ *	Attribute driver_version related methods
+ *	Description: Encoded version number.
+ *               The lower three bytes contain a triple level hierarchy of version numbers, e.g. 0x010103 encodes
+ *               version 1.1.3.
+ *               A change in the first digit generally requires a recompilation of user applications. Change in the
+ *               second digit denote significant improvements or changes that don't break compatibility and the
+ *               third digit changes with minor bug fixes and similar updates.
+ *
+ *	Data type:	Tango::DevLong
+ *	Attr type:	Scalar
+ */
+	virtual void read_driver_version(Tango::Attribute &attr);
+	virtual bool is_driver_version_allowed(Tango::AttReqType type);
+/**
+ *	Attribute board_serial related methods
+ *	Description: Serial number.
+ *               With year and running number in 8.24 format. The number is identical to the one printed on
+ *               the silvery sticker on the board.
+ *
+ *	Data type:	Tango::DevLong
+ *	Attr type:	Scalar
+ */
+	virtual void read_board_serial(Tango::Attribute &attr);
+	virtual bool is_board_serial_allowed(Tango::AttReqType type);
+/**
+ *	Attribute bin_size related methods
+ *	Description: Bin size (in ps) of the measured TDC data. The TDC main clock is running at
+ *               a frequency of 76.8 GHz resulting in a bin size of about 13.0208ps.
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+	virtual void read_bin_size(Tango::Attribute &attr);
+	virtual bool is_bin_size_allowed(Tango::AttReqType type);
+/**
  *	Attribute CH0_Timestamps related methods
  *	Description: 
  *
  *	Data type:	Tango::DevULong64
- *	Attr type:	Spectrum max = 10000000
+ *	Attr type:	Spectrum max = 1400000
  */
 	virtual void read_CH0_Timestamps(Tango::Attribute &attr);
 	virtual bool is_CH0_Timestamps_allowed(Tango::AttReqType type);
@@ -467,7 +515,7 @@ public:
  *	Description: 
  *
  *	Data type:	Tango::DevULong64
- *	Attr type:	Spectrum max = 10000000
+ *	Attr type:	Spectrum max = 1400000
  */
 	virtual void read_CH1_Timestamps(Tango::Attribute &attr);
 	virtual bool is_CH1_Timestamps_allowed(Tango::AttReqType type);
@@ -476,7 +524,7 @@ public:
  *	Description: 
  *
  *	Data type:	Tango::DevULong64
- *	Attr type:	Spectrum max = 10000000
+ *	Attr type:	Spectrum max = 1400000
  */
 	virtual void read_CH2_Timestamps(Tango::Attribute &attr);
 	virtual bool is_CH2_Timestamps_allowed(Tango::AttReqType type);
@@ -485,7 +533,7 @@ public:
  *	Description: 
  *
  *	Data type:	Tango::DevULong64
- *	Attr type:	Spectrum max = 10000000
+ *	Attr type:	Spectrum max = 1400000
  */
 	virtual void read_CH3_Timestamps(Tango::Attribute &attr);
 	virtual bool is_CH3_Timestamps_allowed(Tango::AttReqType type);

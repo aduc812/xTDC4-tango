@@ -1015,8 +1015,8 @@ void XTDC4Class::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	standard_unit	not set for TW_END
 	//	display_unit	not set for TW_END
 	//	format	not set for TW_END
-	//	max_value	not set for TW_END
-	//	min_value	not set for TW_END
+	tw_end_prop.set_max_value("268435456");
+	tw_end_prop.set_min_value("0");
 	//	max_alarm	not set for TW_END
 	//	min_alarm	not set for TW_END
 	//	max_warning	not set for TW_END
@@ -1224,6 +1224,102 @@ void XTDC4Class::attribute_factory(vector<Tango::Attr *> &att_list)
 	run_timeout->set_memorized();
 	run_timeout->set_memorized_init(true);
 	att_list.push_back(run_timeout);
+
+	//	Attribute : firmware_revision
+	firmware_revisionAttrib	*firmware_revision = new firmware_revisionAttrib();
+	Tango::UserDefaultAttrProp	firmware_revision_prop;
+	firmware_revision_prop.set_description("Revision number of the FPGA configuration.");
+	//	label	not set for firmware_revision
+	//	unit	not set for firmware_revision
+	//	standard_unit	not set for firmware_revision
+	//	display_unit	not set for firmware_revision
+	firmware_revision_prop.set_format("0x%08X");
+	//	max_value	not set for firmware_revision
+	//	min_value	not set for firmware_revision
+	//	max_alarm	not set for firmware_revision
+	//	min_alarm	not set for firmware_revision
+	//	max_warning	not set for firmware_revision
+	//	min_warning	not set for firmware_revision
+	//	delta_t	not set for firmware_revision
+	//	delta_val	not set for firmware_revision
+	
+	firmware_revision->set_default_properties(firmware_revision_prop);
+	//	Not Polled
+	firmware_revision->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(firmware_revision);
+
+	//	Attribute : driver_version
+	driver_versionAttrib	*driver_version = new driver_versionAttrib();
+	Tango::UserDefaultAttrProp	driver_version_prop;
+	driver_version_prop.set_description("Encoded version number.\nThe lower three bytes contain a triple level hierarchy of version numbers, e.g. 0x010103 encodes\nversion 1.1.3.\nA change in the first digit generally requires a recompilation of user applications. Change in the\nsecond digit denote significant improvements or changes that don't break compatibility and the\nthird digit changes with minor bug fixes and similar updates.");
+	//	label	not set for driver_version
+	//	unit	not set for driver_version
+	//	standard_unit	not set for driver_version
+	//	display_unit	not set for driver_version
+	driver_version_prop.set_format("0x%08X");
+	//	max_value	not set for driver_version
+	//	min_value	not set for driver_version
+	//	max_alarm	not set for driver_version
+	//	min_alarm	not set for driver_version
+	//	max_warning	not set for driver_version
+	//	min_warning	not set for driver_version
+	//	delta_t	not set for driver_version
+	//	delta_val	not set for driver_version
+	
+	driver_version->set_default_properties(driver_version_prop);
+	//	Not Polled
+	driver_version->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(driver_version);
+
+	//	Attribute : board_serial
+	board_serialAttrib	*board_serial = new board_serialAttrib();
+	Tango::UserDefaultAttrProp	board_serial_prop;
+	board_serial_prop.set_description("Serial number.\nWith year and running number in 8.24 format. The number is identical to the one printed on\nthe silvery sticker on the board.");
+	//	label	not set for board_serial
+	//	unit	not set for board_serial
+	//	standard_unit	not set for board_serial
+	//	display_unit	not set for board_serial
+	board_serial_prop.set_format("0x%08X");
+	//	max_value	not set for board_serial
+	//	min_value	not set for board_serial
+	//	max_alarm	not set for board_serial
+	//	min_alarm	not set for board_serial
+	//	max_warning	not set for board_serial
+	//	min_warning	not set for board_serial
+	//	delta_t	not set for board_serial
+	//	delta_val	not set for board_serial
+	
+	board_serial->set_default_properties(board_serial_prop);
+	//	Not Polled
+	board_serial->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(board_serial);
+
+	//	Attribute : bin_size
+	bin_sizeAttrib	*bin_size = new bin_sizeAttrib();
+	Tango::UserDefaultAttrProp	bin_size_prop;
+	bin_size_prop.set_description("Bin size (in ps) of the measured TDC data. The TDC main clock is running at\na frequency of 76.8 GHz resulting in a bin size of about 13.0208ps.");
+	//	label	not set for bin_size
+	//	unit	not set for bin_size
+	bin_size_prop.set_standard_unit("ps");
+	//	display_unit	not set for bin_size
+	//	format	not set for bin_size
+	//	max_value	not set for bin_size
+	//	min_value	not set for bin_size
+	//	max_alarm	not set for bin_size
+	//	min_alarm	not set for bin_size
+	//	max_warning	not set for bin_size
+	//	min_warning	not set for bin_size
+	//	delta_t	not set for bin_size
+	//	delta_val	not set for bin_size
+	
+	bin_size->set_default_properties(bin_size_prop);
+	//	Not Polled
+	bin_size->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(bin_size);
 
 	//	Attribute : CH0_Timestamps
 	CH0_TimestampsAttrib	*ch0_timestamps = new CH0_TimestampsAttrib();

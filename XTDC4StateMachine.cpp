@@ -565,6 +565,70 @@ bool XTDC4::is_run_timeout_allowed(TANGO_UNUSED(Tango::AttReqType type))
 
 //--------------------------------------------------------
 /**
+ *	Method      : XTDC4::is_firmware_revision_allowed()
+ *	Description : Execution allowed for firmware_revision attribute
+ */
+//--------------------------------------------------------
+bool XTDC4::is_firmware_revision_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for firmware_revision attribute in read access.
+	/*----- PROTECTED REGION ID(XTDC4::firmware_revisionStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::firmware_revisionStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : XTDC4::is_driver_version_allowed()
+ *	Description : Execution allowed for driver_version attribute
+ */
+//--------------------------------------------------------
+bool XTDC4::is_driver_version_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for driver_version attribute in read access.
+	/*----- PROTECTED REGION ID(XTDC4::driver_versionStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::driver_versionStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : XTDC4::is_board_serial_allowed()
+ *	Description : Execution allowed for board_serial attribute
+ */
+//--------------------------------------------------------
+bool XTDC4::is_board_serial_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for board_serial attribute in read access.
+	/*----- PROTECTED REGION ID(XTDC4::board_serialStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::board_serialStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : XTDC4::is_bin_size_allowed()
+ *	Description : Execution allowed for bin_size attribute
+ */
+//--------------------------------------------------------
+bool XTDC4::is_bin_size_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for bin_size attribute in read access.
+	/*----- PROTECTED REGION ID(XTDC4::bin_sizeStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::bin_sizeStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
  *	Method      : XTDC4::is_CH0_Timestamps_allowed()
  *	Description : Execution allowed for CH0_Timestamps attribute
  */

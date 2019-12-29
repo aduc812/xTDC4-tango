@@ -448,12 +448,64 @@ public:
 		{return (static_cast<XTDC4 *>(dev))->is_run_timeout_allowed(ty);}
 };
 
+//	Attribute firmware_revision class definition
+class firmware_revisionAttrib: public Tango::Attr
+{
+public:
+	firmware_revisionAttrib():Attr("firmware_revision",
+			Tango::DEV_LONG, Tango::READ) {};
+	~firmware_revisionAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<XTDC4 *>(dev))->read_firmware_revision(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<XTDC4 *>(dev))->is_firmware_revision_allowed(ty);}
+};
+
+//	Attribute driver_version class definition
+class driver_versionAttrib: public Tango::Attr
+{
+public:
+	driver_versionAttrib():Attr("driver_version",
+			Tango::DEV_LONG, Tango::READ) {};
+	~driver_versionAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<XTDC4 *>(dev))->read_driver_version(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<XTDC4 *>(dev))->is_driver_version_allowed(ty);}
+};
+
+//	Attribute board_serial class definition
+class board_serialAttrib: public Tango::Attr
+{
+public:
+	board_serialAttrib():Attr("board_serial",
+			Tango::DEV_LONG, Tango::READ) {};
+	~board_serialAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<XTDC4 *>(dev))->read_board_serial(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<XTDC4 *>(dev))->is_board_serial_allowed(ty);}
+};
+
+//	Attribute bin_size class definition
+class bin_sizeAttrib: public Tango::Attr
+{
+public:
+	bin_sizeAttrib():Attr("bin_size",
+			Tango::DEV_DOUBLE, Tango::READ) {};
+	~bin_sizeAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<XTDC4 *>(dev))->read_bin_size(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<XTDC4 *>(dev))->is_bin_size_allowed(ty);}
+};
+
 //	Attribute CH0_Timestamps class definition
 class CH0_TimestampsAttrib: public Tango::SpectrumAttr
 {
 public:
 	CH0_TimestampsAttrib():SpectrumAttr("CH0_Timestamps",
-			Tango::DEV_ULONG64, Tango::READ, 10000000) {};
+			Tango::DEV_ULONG64, Tango::READ, 1400000) {};
 	~CH0_TimestampsAttrib() {};
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
 		{(static_cast<XTDC4 *>(dev))->read_CH0_Timestamps(att);}
@@ -466,7 +518,7 @@ class CH1_TimestampsAttrib: public Tango::SpectrumAttr
 {
 public:
 	CH1_TimestampsAttrib():SpectrumAttr("CH1_Timestamps",
-			Tango::DEV_ULONG64, Tango::READ, 10000000) {};
+			Tango::DEV_ULONG64, Tango::READ, 1400000) {};
 	~CH1_TimestampsAttrib() {};
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
 		{(static_cast<XTDC4 *>(dev))->read_CH1_Timestamps(att);}
@@ -479,7 +531,7 @@ class CH2_TimestampsAttrib: public Tango::SpectrumAttr
 {
 public:
 	CH2_TimestampsAttrib():SpectrumAttr("CH2_Timestamps",
-			Tango::DEV_ULONG64, Tango::READ, 10000000) {};
+			Tango::DEV_ULONG64, Tango::READ, 1400000) {};
 	~CH2_TimestampsAttrib() {};
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
 		{(static_cast<XTDC4 *>(dev))->read_CH2_Timestamps(att);}
@@ -492,7 +544,7 @@ class CH3_TimestampsAttrib: public Tango::SpectrumAttr
 {
 public:
 	CH3_TimestampsAttrib():SpectrumAttr("CH3_Timestamps",
-			Tango::DEV_ULONG64, Tango::READ, 10000000) {};
+			Tango::DEV_ULONG64, Tango::READ, 1400000) {};
 	~CH3_TimestampsAttrib() {};
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
 		{(static_cast<XTDC4 *>(dev))->read_CH3_Timestamps(att);}
