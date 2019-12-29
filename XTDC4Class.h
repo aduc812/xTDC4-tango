@@ -433,6 +433,21 @@ public:
 		{return (static_cast<XTDC4 *>(dev))->is_start_trigger_generator_frequency_allowed(ty);}
 };
 
+//	Attribute run_timeout class definition
+class run_timeoutAttrib: public Tango::Attr
+{
+public:
+	run_timeoutAttrib():Attr("run_timeout",
+			Tango::DEV_DOUBLE, Tango::READ_WRITE) {};
+	~run_timeoutAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<XTDC4 *>(dev))->read_run_timeout(att);}
+	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
+		{(static_cast<XTDC4 *>(dev))->write_run_timeout(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<XTDC4 *>(dev))->is_run_timeout_allowed(ty);}
+};
+
 //	Attribute CH0_Timestamps class definition
 class CH0_TimestampsAttrib: public Tango::SpectrumAttr
 {

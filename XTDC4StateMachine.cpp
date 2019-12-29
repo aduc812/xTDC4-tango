@@ -545,6 +545,26 @@ bool XTDC4::is_start_trigger_generator_frequency_allowed(TANGO_UNUSED(Tango::Att
 
 //--------------------------------------------------------
 /**
+ *	Method      : XTDC4::is_run_timeout_allowed()
+ *	Description : Execution allowed for run_timeout attribute
+ */
+//--------------------------------------------------------
+bool XTDC4::is_run_timeout_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+	//	Not any excluded states for run_timeout attribute in Write access.
+	/*----- PROTECTED REGION ID(XTDC4::run_timeoutStateAllowed_WRITE) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::run_timeoutStateAllowed_WRITE
+
+	//	Not any excluded states for run_timeout attribute in read access.
+	/*----- PROTECTED REGION ID(XTDC4::run_timeoutStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::run_timeoutStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
  *	Method      : XTDC4::is_CH0_Timestamps_allowed()
  *	Description : Execution allowed for CH0_Timestamps attribute
  */
@@ -640,7 +660,10 @@ bool XTDC4::is_Stop_allowed(TANGO_UNUSED(const CORBA::Any &any))
 {
 	//	Not any excluded states for Stop command.
 	/*----- PROTECTED REGION ID(XTDC4::StopStateAllowed) ENABLED START -----*/
-	
+	if (get_state() == Tango::RUNNING)
+		return true;
+	else
+		return false;
 	/*----- PROTECTED REGION END -----*/	//	XTDC4::StopStateAllowed
 	return true;
 }

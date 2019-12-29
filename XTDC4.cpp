@@ -99,6 +99,7 @@ static const char *RcsId = "$Id:  $";
 //  last_run_hits                      |  Tango::DevLong	Scalar
 //  last_run_start_errors              |  Tango::DevLong	Scalar
 //  start_trigger_generator_frequency  |  Tango::DevLong	Scalar
+//  run_timeout                        |  Tango::DevDouble	Scalar
 //  CH0_Timestamps                     |  Tango::DevULong64	Spectrum  ( max = 10000000)
 //  CH1_Timestamps                     |  Tango::DevULong64	Spectrum  ( max = 10000000)
 //  CH2_Timestamps                     |  Tango::DevULong64	Spectrum  ( max = 10000000)
@@ -118,6 +119,7 @@ std::queue <datachunk*> datachunk_list[NUMBER_OF_EXPOSED_CHANNELS];
 
 int bTerminatePolingThread;
 std::thread * poller_thread_ref;
+__int64 run_timeout_ticks;
 
 /*----- PROTECTED REGION END -----*/	//	XTDC4::namespace_starting
 
@@ -225,6 +227,7 @@ void XTDC4::delete_device()
 	delete[] attr_last_run_hits_read;
 	delete[] attr_last_run_start_errors_read;
 	delete[] attr_start_trigger_generator_frequency_read;
+	delete[] attr_run_timeout_read;
 	delete[] attr_CH0_Timestamps_read;
 	delete[] attr_CH1_Timestamps_read;
 	delete[] attr_CH2_Timestamps_read;
@@ -276,6 +279,7 @@ void XTDC4::init_device()
 	attr_last_run_hits_read = new Tango::DevLong[1];
 	attr_last_run_start_errors_read = new Tango::DevLong[1];
 	attr_start_trigger_generator_frequency_read = new Tango::DevLong[1];
+	attr_run_timeout_read = new Tango::DevDouble[1];
 	attr_CH0_Timestamps_read = new Tango::DevULong64[10000000];
 	attr_CH1_Timestamps_read = new Tango::DevULong64[10000000];
 	attr_CH2_Timestamps_read = new Tango::DevULong64[10000000];
@@ -334,6 +338,8 @@ void XTDC4::init_device()
 	attr_last_run_empty_starts_read[0] = 0;
 	attr_last_run_hits_read[0] = 0;
 	attr_last_run_start_errors_read[0] = 0;
+
+	attr_run_timeout_read[0] = 0;
 	/*----- PROTECTED REGION END -----*/	//	XTDC4::init_device
 }
 
@@ -1318,6 +1324,48 @@ void XTDC4::write_start_trigger_generator_frequency(Tango::WAttribute &attr)
 }
 //--------------------------------------------------------
 /**
+ *	Read attribute run_timeout related method
+ *	Description: The acquisition run timeout. To be applicable it requires at least one start pulse to arrive after timeout elapsed. 
+ *               The device might still be busy for approx 100-200ms after that, but no timestamps are recorded.
+ *               Set run_timeout to zero for infinite run
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void XTDC4::read_run_timeout(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "XTDC4::read_run_timeout(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(XTDC4::read_run_timeout) ENABLED START -----*/
+	//	Set the attribute value
+	attr.set_value(attr_run_timeout_read);
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::read_run_timeout
+}
+//--------------------------------------------------------
+/**
+ *	Write attribute run_timeout related method
+ *	Description: The acquisition run timeout. To be applicable it requires at least one start pulse to arrive after timeout elapsed. 
+ *               The device might still be busy for approx 100-200ms after that, but no timestamps are recorded.
+ *               Set run_timeout to zero for infinite run
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void XTDC4::write_run_timeout(Tango::WAttribute &attr)
+{
+	DEBUG_STREAM << "XTDC4::write_run_timeout(Tango::WAttribute &attr) entering... " << endl;
+	//	Retrieve write value
+	Tango::DevDouble	w_val;
+	attr.get_write_value(w_val);
+	/*----- PROTECTED REGION ID(XTDC4::write_run_timeout) ENABLED START -----*/
+	attr_run_timeout_read[0] = w_val;
+	attr_config_changed_read[0] = 1;
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::write_run_timeout
+}
+//--------------------------------------------------------
+/**
  *	Read attribute CH0_Timestamps related method
  *	Description: 
  *
@@ -1360,7 +1408,8 @@ void XTDC4::read_CH0_Timestamps(Tango::Attribute &attr)
 		chunk->clear();
 		delete chunk; // this should delete the datachunk itself
 	}*/
-
+	//std::cout << nTimestamps << endl;
+	//std::cout << attr_CH0_Timestamps_read[0] << endl;
 	attr.set_value(attr_CH0_Timestamps_read, nTimestamps);
 	
 	/*----- PROTECTED REGION END -----*/	//	XTDC4::read_CH0_Timestamps
@@ -1588,7 +1637,8 @@ void XTDC4::apply_config()
 	config.tiger_block[0].enable_lemo_output = attr_start_trigger_generator_read[0] ? 1 : 0;
 	config.tiger_block[0].sources = XTDC4_TRIGGER_SOURCE_AUTO;
 
-
+	//set timeout (it is not controlled by hardware)
+	run_timeout_ticks = (__int64) (attr_run_timeout_read[0] * 600e6); //1 tick = 1.6666666666 ns (600 MHz)
 	// activate configuration
 	int error_code = xtdc4_configure(this_device_ref, &config);
 	if (error_code != CRONO_OK)
@@ -1632,7 +1682,9 @@ void XTDC4::run_poller_thread()
 
 void XTDC4::poller_thread()
 {
+#ifdef _DEBUG
 	std::cout << "Thread launched" << std::endl;
+#endif
 
 	xtdc4_read_in read_config;
 	// automatically acknowledge all data as processed
@@ -1647,7 +1699,9 @@ void XTDC4::poller_thread()
 		if (bTerminatePolingThread) // got a terminate request
 		{
 			bTerminatePolingThread = 0;
+#ifdef _DEBUG
 			std::cout << "Thread terminated" << std::endl;
+#endif
 			set_state(Tango::DevState::ON);			
 			return;
 		}
@@ -1661,7 +1715,9 @@ void XTDC4::poller_thread()
 			{ // acquisition is stopped and no more data available. Job done!
 				xtdc4_stop_capture(this_device_ref);
 				set_state(Tango::DevState::ON);
+#ifdef _DEBUG
 				std::cout << "Thread stopped" << std::endl;
+#endif
 				return;
 			}
 		}break;
@@ -1684,9 +1740,11 @@ void XTDC4::poller_thread()
 			if ((last_packet - first_packet) > 16000000) // this is an insurance against something bad happening in memory, like first_packet>last_packet.
 														//There should be otherwise no conceivable way to get anywhere close to 2M hits (8 bytes each) per 100 ms polling period
 			{
-				xtdc4_stop_capture(this_device_ref);
-				set_state(Tango::DevState::FAULT);
+				xtdc4_stop_capture(this_device_ref);				
+#ifdef _DEBUG
 				std::cout << "Thread failed" << std::endl;
+#endif
+				set_state(Tango::DevState::FAULT);
 				return;
 			}
 
@@ -1702,6 +1760,17 @@ void XTDC4::poller_thread()
 			{
 				int bPacketInvalid = 0;
 				crono_packet *p = *first_packet;
+				// check start tmestamp and see if timeout is due
+				if ((p->timestamp > run_timeout_ticks) && (run_timeout_ticks > 0))
+				{
+					xtdc4_stop_capture(this_device_ref);
+					push_datachunks(current_chunk_array);
+#ifdef _DEBUG
+					std::cout << "Thread timeout" << std::endl;
+#endif
+					set_state(Tango::DevState::ON);
+					return; 
+				}
 				// a packet with no hits
 				if (p->length == 0)
 				{
@@ -1746,6 +1815,8 @@ void XTDC4::poller_thread()
 						int realhitcount = 0;
 						for (int ctr = 0; ctr < hitcount; ctr++)
 						{
+							
+								
 							if ((packetdata[ctr] & (unsigned long)0x2f) == 0x2f)// in the last byte, bit 5 is rollover and bits 0..3 indicate channel 15
 							{
 								rollover_count += 0x01000000;
@@ -1773,13 +1844,22 @@ void XTDC4::poller_thread()
 				*first_packet = crono_next_packet(*first_packet);
 			}
 			// datachunks have been formed. Now we need to push them into queues
-			for (int ctr = 0; ctr < NUMBER_OF_EXPOSED_CHANNELS; ctr++)
-			{
-				if (current_chunk_array[ctr]->size() != 0)
-				{
-					datachunk_list[ctr].push(current_chunk_array[ctr]); // a pointer to dynamically created datachunk is pushed into a queue of pointers. 
-				}
-			}			
+			push_datachunks(current_chunk_array);
+
+			//for (int ctr = 0; ctr < NUMBER_OF_EXPOSED_CHANNELS; ctr++)//
+			//{
+			//	if (current_chunk_array[ctr]->size() != 0)
+			//	{
+			//		//std::cout << current_chunk_array[ctr]->size() << std::endl;
+			//		//std::cout << current_chunk_array[ctr]->max_size() << std::endl;
+			//		datachunk_list[ctr].push(current_chunk_array[ctr]); // a pointer to dynamically created datachunk is pushed into a queue of pointers. 
+			//	}
+			//	else
+			//	{
+			//		// empty chunk - delete it! the pointer will be discarded as it is in a local array
+			//		delete current_chunk_array[ctr];
+			//	}
+			//}			
 		}break;
 		}//switch
 		Sleep(100);
@@ -1792,6 +1872,7 @@ void XTDC4::prepare_channel_timestamps_to_send(unsigned char channel, Tango::Dev
 	*number_of_timestamps_prepared = 0;
 	while (!datachunk_list[channel].empty())
 	{
+		//std::cout << datachunk_list[channel].front() -> size() << endl;
 		//if (datachunk_list_lock[channel])//the queue is being written. Wait a bit and repeat.
 		//{									
 		//	Sleep(1);
@@ -1816,9 +1897,25 @@ void XTDC4::prepare_channel_timestamps_to_send(unsigned char channel, Tango::Dev
 		chunk->clear();
 		delete chunk; // this should delete the datachunk itself
 	}
+	//std::cout << *number_of_timestamps_prepared << endl;
 }
-
-
+void XTDC4::push_datachunks(datachunk * current_chunk_array[NUMBER_OF_EXPOSED_CHANNELS])
+{
+	for (int ctr = 0; ctr < NUMBER_OF_EXPOSED_CHANNELS; ctr++)
+	{
+		if (current_chunk_array[ctr]->size() != 0)
+		{
+			//std::cout << current_chunk_array[ctr]->size() << std::endl;
+			//std::cout << current_chunk_array[ctr]->max_size() << std::endl;
+			datachunk_list[ctr].push(current_chunk_array[ctr]); // a pointer to dynamically created datachunk is pushed into a queue of pointers. 
+		}
+		else
+		{
+			// empty chunk - delete it! the pointer will be discarded as it is in a local array
+			delete current_chunk_array[ctr];
+		}
+	}
+}
 
 /*----- PROTECTED REGION END -----*/	//	XTDC4::namespace_ending
 } //	namespace

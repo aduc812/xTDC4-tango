@@ -1200,6 +1200,31 @@ void XTDC4Class::attribute_factory(vector<Tango::Attr *> &att_list)
 	start_trigger_generator_frequency->set_memorized_init(true);
 	att_list.push_back(start_trigger_generator_frequency);
 
+	//	Attribute : run_timeout
+	run_timeoutAttrib	*run_timeout = new run_timeoutAttrib();
+	Tango::UserDefaultAttrProp	run_timeout_prop;
+	run_timeout_prop.set_description("The acquisition run timeout. To be applicable it requires at least one start pulse to arrive after timeout elapsed. \nThe device might still be busy for approx 100-200ms after that, but no timestamps are recorded.\nSet run_timeout to zero for infinite run");
+	//	label	not set for run_timeout
+	run_timeout_prop.set_unit("s");
+	//	standard_unit	not set for run_timeout
+	//	display_unit	not set for run_timeout
+	//	format	not set for run_timeout
+	run_timeout_prop.set_max_value("30744573456");
+	run_timeout_prop.set_min_value("0");
+	//	max_alarm	not set for run_timeout
+	//	min_alarm	not set for run_timeout
+	//	max_warning	not set for run_timeout
+	//	min_warning	not set for run_timeout
+	//	delta_t	not set for run_timeout
+	//	delta_val	not set for run_timeout
+	
+	run_timeout->set_default_properties(run_timeout_prop);
+	//	Not Polled
+	run_timeout->set_disp_level(Tango::OPERATOR);
+	run_timeout->set_memorized();
+	run_timeout->set_memorized_init(true);
+	att_list.push_back(run_timeout);
+
 	//	Attribute : CH0_Timestamps
 	CH0_TimestampsAttrib	*ch0_timestamps = new CH0_TimestampsAttrib();
 	Tango::UserDefaultAttrProp	ch0_timestamps_prop;

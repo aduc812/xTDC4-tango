@@ -116,6 +116,7 @@ public:
 	Tango::DevLong	*attr_last_run_hits_read;
 	Tango::DevLong	*attr_last_run_start_errors_read;
 	Tango::DevLong	*attr_start_trigger_generator_frequency_read;
+	Tango::DevDouble	*attr_run_timeout_read;
 	Tango::DevULong64	*attr_CH0_Timestamps_read;
 	Tango::DevULong64	*attr_CH1_Timestamps_read;
 	Tango::DevULong64	*attr_CH2_Timestamps_read;
@@ -441,6 +442,18 @@ public:
 	virtual void write_start_trigger_generator_frequency(Tango::WAttribute &attr);
 	virtual bool is_start_trigger_generator_frequency_allowed(Tango::AttReqType type);
 /**
+ *	Attribute run_timeout related methods
+ *	Description: The acquisition run timeout. To be applicable it requires at least one start pulse to arrive after timeout elapsed. 
+ *               The device might still be busy for approx 100-200ms after that, but no timestamps are recorded.
+ *               Set run_timeout to zero for infinite run
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+	virtual void read_run_timeout(Tango::Attribute &attr);
+	virtual void write_run_timeout(Tango::WAttribute &attr);
+	virtual bool is_run_timeout_allowed(Tango::AttReqType type);
+/**
  *	Attribute CH0_Timestamps related methods
  *	Description: 
  *
@@ -534,6 +547,8 @@ public:
 	void poller_thread(); // this function is run in a separate thread continuously checking for data when running
 	void run_poller_thread(); // this is to run the thread above
 
+	// insert and remove datachunks to/from queue
+	void push_datachunks(datachunk * current_chunk_array[]);
 	void prepare_channel_timestamps_to_send(unsigned char channel, Tango::DevULong64 *attr_CH_Timestamps_read, unsigned long * number_of_timestamps_prepared);
 /*----- PROTECTED REGION END -----*/	//	XTDC4::Additional Method prototypes
 };
