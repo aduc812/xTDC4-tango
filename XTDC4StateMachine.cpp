@@ -742,7 +742,10 @@ bool XTDC4::is_Off_allowed(TANGO_UNUSED(const CORBA::Any &any))
 {
 	//	Not any excluded states for Off command.
 	/*----- PROTECTED REGION ID(XTDC4::OffStateAllowed) ENABLED START -----*/
-	
+	if (get_state() == Tango::ON)
+		return true;
+	else
+		return false;
 	/*----- PROTECTED REGION END -----*/	//	XTDC4::OffStateAllowed
 	return true;
 }
@@ -757,8 +760,29 @@ bool XTDC4::is_apply_config_allowed(TANGO_UNUSED(const CORBA::Any &any))
 {
 	//	Not any excluded states for apply_config command.
 	/*----- PROTECTED REGION ID(XTDC4::apply_configStateAllowed) ENABLED START -----*/
-	
+	if (get_state() == Tango::ON)
+		return true;
+	else
+		return false;
 	/*----- PROTECTED REGION END -----*/	//	XTDC4::apply_configStateAllowed
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : XTDC4::is_Clear_allowed()
+ *	Description : Execution allowed for Clear attribute
+ */
+//--------------------------------------------------------
+bool XTDC4::is_Clear_allowed(TANGO_UNUSED(const CORBA::Any &any))
+{
+	//	Not any excluded states for Clear command.
+	/*----- PROTECTED REGION ID(XTDC4::ClearStateAllowed) ENABLED START -----*/
+	if (get_state() == Tango::ON)
+		return true;
+	else
+		return false;
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::ClearStateAllowed
 	return true;
 }
 

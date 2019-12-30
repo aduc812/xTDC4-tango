@@ -580,6 +580,13 @@ public:
 	 */
 	virtual void apply_config();
 	virtual bool is_apply_config_allowed(const CORBA::Any &any);
+	/**
+	 *	Command Clear related method
+	 *	Description: Clear all timestamps in buffer.
+	 *
+	 */
+	virtual void clear();
+	virtual bool is_Clear_allowed(const CORBA::Any &any);
 
 
 	//--------------------------------------------------------

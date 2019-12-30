@@ -68,6 +68,7 @@ static const char *RcsId = "$Id:  $";
 //  Stop          |  stop
 //  Off           |  off
 //  apply_config  |  apply_config
+//  Clear         |  clear
 //================================================================
 
 //================================================================
@@ -189,17 +190,8 @@ void XTDC4::delete_device()
 	xtdc4_close(this_device_ref);
 	set_state(Tango::DevState::OFF);
 
-	// empty the data queue
-	for (int ctr = 0; ctr < NUMBER_OF_EXPOSED_CHANNELS; ctr++)
-	{
-		while (!datachunk_list[ctr].empty())
-		{
-			datachunk * elem = datachunk_list[ctr].front();
-			datachunk_list[ctr].pop(); // this deletes the pointer to datachunk from queue
-			elem->clear();
-			delete elem; // this should delete the datachunk itself
-		}
-	}
+	// clear the output buffer queue (and delete its datachunks)
+	clear();
 	
 	delete[] attr_error_message_read[0]; // unallocate memory for error message
 
@@ -1763,6 +1755,32 @@ void XTDC4::apply_config()
 	}
 	
 	/*----- PROTECTED REGION END -----*/	//	XTDC4::apply_config
+}
+//--------------------------------------------------------
+/**
+ *	Command Clear related method
+ *	Description: Clear all timestamps in buffer.
+ *
+ */
+//--------------------------------------------------------
+void XTDC4::clear()
+{
+	DEBUG_STREAM << "XTDC4::Clear()  - " << device_name << endl;
+	/*----- PROTECTED REGION ID(XTDC4::clear) ENABLED START -----*/
+	
+	// empty the data queue
+	for (int ctr = 0; ctr < NUMBER_OF_EXPOSED_CHANNELS; ctr++)
+	{
+		while (!datachunk_list[ctr].empty())
+		{
+			datachunk * elem = datachunk_list[ctr].front();
+			datachunk_list[ctr].pop(); // this deletes the pointer to datachunk from queue
+			elem->clear();
+			delete elem; // this should delete the datachunk itself
+		}
+	}
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::clear
 }
 //--------------------------------------------------------
 /**

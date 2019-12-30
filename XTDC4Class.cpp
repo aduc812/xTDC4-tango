@@ -230,6 +230,24 @@ CORBA::Any *apply_configClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(c
 	return new CORBA::Any();
 }
 
+//--------------------------------------------------------
+/**
+ * method : 		ClearClass::execute()
+ * description : 	method to trigger the execution of the command.
+ *
+ * @param	device	The device on which the command must be executed
+ * @param	in_any	The command input data
+ *
+ *	returns The command output data (packed in the Any object)
+ */
+//--------------------------------------------------------
+CORBA::Any *ClearClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
+{
+	cout2 << "ClearClass::execute(): arrived" << endl;
+	((static_cast<XTDC4 *>(device))->clear());
+	return new CORBA::Any();
+}
+
 
 //===================================================================
 //	Properties management
@@ -1497,6 +1515,15 @@ void XTDC4Class::command_factory()
 			"",
 			Tango::OPERATOR);
 	command_list.push_back(papply_configCmd);
+
+	//	Command Clear
+	ClearClass	*pClearCmd =
+		new ClearClass("Clear",
+			Tango::DEV_VOID, Tango::DEV_VOID,
+			"",
+			"",
+			Tango::OPERATOR);
+	command_list.push_back(pClearCmd);
 
 	/*----- PROTECTED REGION ID(XTDC4Class::command_factory_after) ENABLED START -----*/
 	
