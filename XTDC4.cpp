@@ -124,6 +124,7 @@ std::queue <datachunk*> datachunk_list[NUMBER_OF_EXPOSED_CHANNELS];
 int bTerminatePolingThread;
 std::thread * poller_thread_ref;
 __int64 run_timeout_ticks;
+__int64 first_start_timestamp;
 
 /*----- PROTECTED REGION END -----*/	//	XTDC4::namespace_starting
 
@@ -183,10 +184,10 @@ void XTDC4::delete_device()
 			Sleep(10);
 		}
 	}
-	
 
 	//	Delete device allocated objects
 	xtdc4_close(this_device_ref);
+	set_state(Tango::DevState::OFF);
 
 	// empty the data queue
 	for (int ctr = 0; ctr < NUMBER_OF_EXPOSED_CHANNELS; ctr++)
@@ -197,11 +198,9 @@ void XTDC4::delete_device()
 			datachunk_list[ctr].pop(); // this deletes the pointer to datachunk from queue
 			elem->clear();
 			delete elem; // this should delete the datachunk itself
-			
-
 		}
 	}
-
+	
 	delete[] attr_error_message_read[0]; // unallocate memory for error message
 
 	/*----- PROTECTED REGION END -----*/	//	XTDC4::delete_device
@@ -1353,7 +1352,7 @@ void XTDC4::write_start_trigger_generator_frequency(Tango::WAttribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute run_timeout related method
- *	Description: The acquisition run timeout. To be applicable it requires at least one start pulse to arrive after timeout elapsed. 
+ *	Description: The acquisition run timeout. The timer is started by the first start pulse. To stop on timeout it requires at least one start pulse to arrive after timeout elapsed. 
  *               The device might still be busy for approx 100-200ms after that, but no timestamps are recorded.
  *               Set run_timeout to zero for infinite run
  *
@@ -1373,7 +1372,7 @@ void XTDC4::read_run_timeout(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Write attribute run_timeout related method
- *	Description: The acquisition run timeout. To be applicable it requires at least one start pulse to arrive after timeout elapsed. 
+ *	Description: The acquisition run timeout. The timer is started by the first start pulse. To stop on timeout it requires at least one start pulse to arrive after timeout elapsed. 
  *               The device might still be busy for approx 100-200ms after that, but no timestamps are recorded.
  *               Set run_timeout to zero for infinite run
  *
@@ -1622,9 +1621,12 @@ void XTDC4::start()
 	attr_last_run_empty_starts_read[0] = 0;
 	attr_last_run_hits_read[0] = 0;
 	attr_last_run_start_errors_read[0] = 0;
+
+	first_start_timestamp = -1;
 	
 	xtdc4_start_tiger(this_device_ref);
 	xtdc4_start_capture(this_device_ref);
+	
 
 	set_state(Tango::DevState::RUNNING);
 	run_poller_thread();
@@ -1868,8 +1870,12 @@ void XTDC4::poller_thread()
 			{
 				int bPacketInvalid = 0;
 				crono_packet *p = *first_packet;
+				if (first_start_timestamp == -1)
+				{
+					first_start_timestamp = p->timestamp;
+				}
 				// check start tmestamp and see if timeout is due
-				if ((p->timestamp > run_timeout_ticks) && (run_timeout_ticks > 0))
+				if ((p->timestamp > (run_timeout_ticks + first_start_timestamp)) && (run_timeout_ticks > 0))
 				{
 					xtdc4_stop_capture(this_device_ref);
 					push_datachunks(current_chunk_array);

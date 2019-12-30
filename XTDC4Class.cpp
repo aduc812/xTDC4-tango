@@ -1203,7 +1203,7 @@ void XTDC4Class::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	Attribute : run_timeout
 	run_timeoutAttrib	*run_timeout = new run_timeoutAttrib();
 	Tango::UserDefaultAttrProp	run_timeout_prop;
-	run_timeout_prop.set_description("The acquisition run timeout. To be applicable it requires at least one start pulse to arrive after timeout elapsed. \nThe device might still be busy for approx 100-200ms after that, but no timestamps are recorded.\nSet run_timeout to zero for infinite run");
+	run_timeout_prop.set_description("The acquisition run timeout. The timer is started by the first start pulse. To stop on timeout it requires at least one start pulse to arrive after timeout elapsed. \nThe device might still be busy for approx 100-200ms after that, but no timestamps are recorded.\nSet run_timeout to zero for infinite run");
 	//	label	not set for run_timeout
 	run_timeout_prop.set_unit("s");
 	//	standard_unit	not set for run_timeout

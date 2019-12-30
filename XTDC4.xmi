@@ -293,7 +293,7 @@
       <archiveEvent fire="false" libCheckCriteria="false"/>
       <dataReadyEvent fire="false" libCheckCriteria="true"/>
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
-      <properties description="The acquisition run timeout. To be applicable it requires at least one start pulse to arrive after timeout elapsed. &#xA;The device might still be busy for approx 100-200ms after that, but no timestamps are recorded.&#xA;Set run_timeout to zero for infinite run" label="" unit="s" standardUnit="" displayUnit="" format="" maxValue="30744573456" minValue="0" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
+      <properties description="The acquisition run timeout. The timer is started by the first start pulse. To stop on timeout it requires at least one start pulse to arrive after timeout elapsed. &#xA;The device might still be busy for approx 100-200ms after that, but no timestamps are recorded.&#xA;Set run_timeout to zero for infinite run" label="" unit="s" standardUnit="" displayUnit="" format="" maxValue="30744573456" minValue="0" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
     </attributes>
     <attributes name="firmware_revision" attType="Scalar" rwType="READ" displayLevel="OPERATOR" polledPeriod="0" maxX="" maxY="" allocReadMember="true" isDynamic="false">
       <dataType xsi:type="pogoDsl:IntType"/>

@@ -447,7 +447,7 @@ public:
 	virtual bool is_start_trigger_generator_frequency_allowed(Tango::AttReqType type);
 /**
  *	Attribute run_timeout related methods
- *	Description: The acquisition run timeout. To be applicable it requires at least one start pulse to arrive after timeout elapsed. 
+ *	Description: The acquisition run timeout. The timer is started by the first start pulse. To stop on timeout it requires at least one start pulse to arrive after timeout elapsed. 
  *               The device might still be busy for approx 100-200ms after that, but no timestamps are recorded.
  *               Set run_timeout to zero for infinite run
  *
