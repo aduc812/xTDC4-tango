@@ -359,6 +359,13 @@ void XTDC4::init_device()
 	xtdc4_param_info p_info;
 	xtdc4_get_param_info(this_device_ref, &p_info);
 	attr_bin_size_read[0] = p_info.binsize;
+
+	set_change_event("CH0_Timestamps",true);
+	set_change_event("CH1_Timestamps", true);
+	set_change_event("CH2_Timestamps", true);
+	set_change_event("CH3_Timestamps", true);
+
+
 	/*----- PROTECTED REGION END -----*/	//	XTDC4::init_device
 }
 
