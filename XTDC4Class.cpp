@@ -1361,6 +1361,7 @@ void XTDC4Class::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	Not Polled
 	ch0_timestamps->set_disp_level(Tango::OPERATOR);
 	//	Not Memorized
+	ch0_timestamps->set_data_ready_event(true);
 	att_list.push_back(ch0_timestamps);
 
 	//	Attribute : CH1_Timestamps
@@ -1385,6 +1386,7 @@ void XTDC4Class::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	Not Polled
 	ch1_timestamps->set_disp_level(Tango::OPERATOR);
 	//	Not Memorized
+	ch1_timestamps->set_data_ready_event(true);
 	att_list.push_back(ch1_timestamps);
 
 	//	Attribute : CH2_Timestamps
@@ -1409,6 +1411,7 @@ void XTDC4Class::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	Not Polled
 	ch2_timestamps->set_disp_level(Tango::OPERATOR);
 	//	Not Memorized
+	ch2_timestamps->set_data_ready_event(true);
 	att_list.push_back(ch2_timestamps);
 
 	//	Attribute : CH3_Timestamps
@@ -1433,6 +1436,7 @@ void XTDC4Class::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	Not Polled
 	ch3_timestamps->set_disp_level(Tango::OPERATOR);
 	//	Not Memorized
+	ch3_timestamps->set_data_ready_event(true);
 	att_list.push_back(ch3_timestamps);
 
 

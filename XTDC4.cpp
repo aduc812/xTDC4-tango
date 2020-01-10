@@ -1897,6 +1897,8 @@ void XTDC4::poller_thread()
 				{
 					xtdc4_stop_capture(this_device_ref);
 					push_datachunks(current_chunk_array);
+					// this was added for event pushing instead of polling
+					flush_timestamps_as_event();
 #ifdef _DEBUG
 					std::cout << "Thread timeout" << std::endl;
 #endif
@@ -1977,24 +1979,22 @@ void XTDC4::poller_thread()
 			}
 			// datachunks have been formed. Now we need to push them into queues
 			push_datachunks(current_chunk_array);
-
-			//for (int ctr = 0; ctr < NUMBER_OF_EXPOSED_CHANNELS; ctr++)//
-			//{
-			//	if (current_chunk_array[ctr]->size() != 0)
-			//	{
-			//		//std::cout << current_chunk_array[ctr]->size() << std::endl;
-			//		//std::cout << current_chunk_array[ctr]->max_size() << std::endl;
-			//		datachunk_list[ctr].push(current_chunk_array[ctr]); // a pointer to dynamically created datachunk is pushed into a queue of pointers. 
-			//	}
-			//	else
-			//	{
-			//		// empty chunk - delete it! the pointer will be discarded as it is in a local array
-			//		delete current_chunk_array[ctr];
-			//	}
-			//}			
+			//
+			// this was added for event pushing instead of polling
+			flush_timestamps_as_event();
+			
+	
 		}break;
 		}//switch
+
+		
+
+
 		Sleep(100);
+		
+		
+		
+
 	}
 	return;
 }
@@ -2049,5 +2049,20 @@ void XTDC4::push_datachunks(datachunk * current_chunk_array[NUMBER_OF_EXPOSED_CH
 	}
 }
 
+void XTDC4::flush_timestamps_as_event()
+{
+	// this was added for event pushing instead of polling
+	Tango::DevULong64 **attr_ptrs[4] = { &attr_CH0_Timestamps_read, &attr_CH1_Timestamps_read, &attr_CH2_Timestamps_read, &attr_CH3_Timestamps_read };
+	std::string attr_names[4] = { "CH0_Timestamps", "CH1_Timestamps", "CH2_Timestamps", "CH3_Timestamps" };
+	for (int ctr = 0; ctr < NUMBER_OF_EXPOSED_CHANNELS; ctr++)
+	{
+		unsigned long nTimestamps = 0;
+		prepare_channel_timestamps_to_send(ctr, *(attr_ptrs[ctr]), &nTimestamps);
+		if (nTimestamps)
+		{
+			push_change_event(attr_names[ctr], *(attr_ptrs[ctr]), nTimestamps);
+		}
+	}
+}
 /*----- PROTECTED REGION END -----*/	//	XTDC4::namespace_ending
 } //	namespace

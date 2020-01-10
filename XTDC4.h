@@ -605,6 +605,7 @@ public:
 	// insert and remove datachunks to/from queue
 	void push_datachunks(datachunk * current_chunk_array[]);
 	void prepare_channel_timestamps_to_send(unsigned char channel, Tango::DevULong64 *attr_CH_Timestamps_read, unsigned long * number_of_timestamps_prepared);
+	void flush_timestamps_as_event();
 /*----- PROTECTED REGION END -----*/	//	XTDC4::Additional Method prototypes
 };
 
