@@ -373,6 +373,20 @@ void XTDC4Class::set_default_property()
 	}
 	else
 		add_wiz_dev_prop(prop_name, prop_desc);
+	prop_name = "push_events";
+	prop_desc = "If False, the CHx_Timestamps attributes have to be read periodically to fetch timestamps.\nIf True, the CHANGE events are generated on CHx_Timestamps attributes that push all timestamps. Reading  these attributes return empty vectors.";
+	prop_def  = "True";
+	vect_data.clear();
+	vect_data.push_back("True");
+	if (prop_def.length()>0)
+	{
+		Tango::DbDatum	data(prop_name);
+		data << vect_data ;
+		dev_def_prop.push_back(data);
+		add_wiz_dev_prop(prop_name, prop_desc,  prop_def);
+	}
+	else
+		add_wiz_dev_prop(prop_name, prop_desc);
 }
 
 //--------------------------------------------------------

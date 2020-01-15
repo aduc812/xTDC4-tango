@@ -87,6 +87,9 @@ public:
 	Tango::DevShort	card_index;
 	//	use_ext_clock:	If set to 1 use external 10 MHz reference. If set to 0 use internal reference.
 	Tango::DevShort	use_ext_clock;
+	//	push_events:	If False, the CHx_Timestamps attributes have to be read periodically to fetch timestamps.
+	//  If True, the CHANGE events are generated on CHx_Timestamps attributes that push all timestamps. Reading  these attributes return empty vectors.
+	Tango::DevBoolean	push_events;
 
 //	Attribute data members
 public:

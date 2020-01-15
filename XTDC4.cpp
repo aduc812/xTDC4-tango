@@ -390,6 +390,7 @@ void XTDC4::get_device_property()
 	dev_prop.push_back(Tango::DbDatum("board_id"));
 	dev_prop.push_back(Tango::DbDatum("card_index"));
 	dev_prop.push_back(Tango::DbDatum("use_ext_clock"));
+	dev_prop.push_back(Tango::DbDatum("push_events"));
 
 	//	is there at least one property to be read ?
 	if (dev_prop.size()>0)
@@ -447,6 +448,17 @@ void XTDC4::get_device_property()
 		}
 		//	And try to extract use_ext_clock value from database
 		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  use_ext_clock;
+
+		//	Try to initialize push_events from class property
+		cl_prop = ds_class->get_class_property(dev_prop[++i].name);
+		if (cl_prop.is_empty()==false)	cl_prop  >>  push_events;
+		else {
+			//	Try to initialize push_events from default device value
+			def_prop = ds_class->get_default_device_property(dev_prop[i].name);
+			if (def_prop.is_empty()==false)	def_prop  >>  push_events;
+		}
+		//	And try to extract push_events value from database
+		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  push_events;
 
 	}
 
@@ -1485,38 +1497,11 @@ void XTDC4::read_CH0_Timestamps(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(XTDC4::read_CH0_Timestamps) ENABLED START -----*/
 	//	Set the attribute value
 	unsigned long nTimestamps = 0;
-
-	prepare_channel_timestamps_to_send(0, attr_CH0_Timestamps_read, &nTimestamps);
-
-	/*while (!datachunk_list[channel].empty())
+	if (!push_events)
 	{
-		//if (datachunk_list_lock[channel])//the queue is being written. Wait a bit and repeat.
-		//{									
-		//	Sleep(1);
-		//	continue;
-		//}
-		if ((datachunk_list[channel].size() < 2) && state() != Tango::DevState::ON) // never read last element unless acquisition is ended. Thus no racing conditions.
-		{
-			break;
-		}
-		datachunk * chunk = datachunk_list[channel].front();
-		if (chunk->size() + nTimestamps >= MAX_TIMESTAMPS_BUFFER_SIZE)
-		{
-			break; // output buffer full, next chunk does not fit. Wait until next time
-		}
-
-		datachunk_list[channel].pop(); // this deletes the pointer to datachunk from the queue
-		// but the chunk itself still exist; copy it to the output
-
-		std::copy_n(&((*chunk)[0]), chunk->size(), attr_CH0_Timestamps_read + nTimestamps);
-		nTimestamps += chunk->size();
-
-		chunk->clear();
-		delete chunk; // this should delete the datachunk itself
-	}*/
-	//std::cout << nTimestamps << endl;
-	//std::cout << attr_CH0_Timestamps_read[0] << endl;
-	attr.set_value(attr_CH0_Timestamps_read, nTimestamps);
+		prepare_channel_timestamps_to_send(0, attr_CH0_Timestamps_read, &nTimestamps);
+	}
+		attr.set_value(attr_CH0_Timestamps_read, nTimestamps);
 	
 	/*----- PROTECTED REGION END -----*/	//	XTDC4::read_CH0_Timestamps
 }
@@ -1534,9 +1519,10 @@ void XTDC4::read_CH1_Timestamps(Tango::Attribute &attr)
 	DEBUG_STREAM << "XTDC4::read_CH1_Timestamps(Tango::Attribute &attr) entering... " << endl;
 	/*----- PROTECTED REGION ID(XTDC4::read_CH1_Timestamps) ENABLED START -----*/
 	unsigned long nTimestamps = 0;
-
-	prepare_channel_timestamps_to_send(1, attr_CH1_Timestamps_read, &nTimestamps);
-
+	if (!push_events)
+	{
+		prepare_channel_timestamps_to_send(1, attr_CH1_Timestamps_read, &nTimestamps);
+	}
 	//	Set the attribute value
 	attr.set_value(attr_CH1_Timestamps_read, nTimestamps);
 	
@@ -1556,7 +1542,10 @@ void XTDC4::read_CH2_Timestamps(Tango::Attribute &attr)
 	DEBUG_STREAM << "XTDC4::read_CH2_Timestamps(Tango::Attribute &attr) entering... " << endl;
 	/*----- PROTECTED REGION ID(XTDC4::read_CH2_Timestamps) ENABLED START -----*/
 	unsigned long nTimestamps = 0;
-	prepare_channel_timestamps_to_send(2, attr_CH2_Timestamps_read, &nTimestamps);
+	if (!push_events)
+	{
+		prepare_channel_timestamps_to_send(2, attr_CH2_Timestamps_read, &nTimestamps);
+	}
 	//	Set the attribute value
 	attr.set_value(attr_CH2_Timestamps_read, nTimestamps);
 	
@@ -1576,7 +1565,10 @@ void XTDC4::read_CH3_Timestamps(Tango::Attribute &attr)
 	DEBUG_STREAM << "XTDC4::read_CH3_Timestamps(Tango::Attribute &attr) entering... " << endl;
 	/*----- PROTECTED REGION ID(XTDC4::read_CH3_Timestamps) ENABLED START -----*/
 	unsigned long nTimestamps = 0;
-	prepare_channel_timestamps_to_send(3, attr_CH3_Timestamps_read, &nTimestamps);
+	if (!push_events)
+	{
+		prepare_channel_timestamps_to_send(3, attr_CH3_Timestamps_read, &nTimestamps);
+	}
 	//	Set the attribute value
 	attr.set_value(attr_CH3_Timestamps_read, nTimestamps);
 	
@@ -1904,12 +1896,17 @@ void XTDC4::poller_thread()
 				{
 					xtdc4_stop_capture(this_device_ref);
 					push_datachunks(current_chunk_array);
-					// this was added for event pushing instead of polling
-					flush_timestamps_as_event();
+					
 #ifdef _DEBUG
 					std::cout << "Thread timeout" << std::endl;
 #endif
 					set_state(Tango::DevState::ON);
+
+					// this was added for event pushing instead of polling
+					if (push_events)
+					{
+						flush_timestamps_as_event();
+					}
 					return; 
 				}
 				// a packet with no hits
@@ -1987,8 +1984,11 @@ void XTDC4::poller_thread()
 			// datachunks have been formed. Now we need to push them into queues
 			push_datachunks(current_chunk_array);
 			//
-			// this was added for event pushing instead of polling
-			flush_timestamps_as_event();
+			if (push_events)
+			{
+				// this was added for event pushing instead of polling
+				flush_timestamps_as_event();
+			}
 			
 	
 		}break;
