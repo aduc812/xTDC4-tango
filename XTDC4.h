@@ -124,6 +124,7 @@ public:
 	Tango::DevLong	*attr_driver_version_read;
 	Tango::DevLong	*attr_board_serial_read;
 	Tango::DevDouble	*attr_bin_size_read;
+	Tango::DevULong64	*attr_trigger_number_read;
 	Tango::DevULong64	*attr_CH0_Timestamps_read;
 	Tango::DevULong64	*attr_CH1_Timestamps_read;
 	Tango::DevULong64	*attr_CH2_Timestamps_read;
@@ -504,6 +505,15 @@ public:
  */
 	virtual void read_bin_size(Tango::Attribute &attr);
 	virtual bool is_bin_size_allowed(Tango::AttReqType type);
+/**
+ *	Attribute trigger_number related methods
+ *	Description: The number of a event trigger. Increments every time an event is pushed on CHx_Timestamps attributes. Increments by 1000000 with every Start() call.
+ *
+ *	Data type:	Tango::DevULong64
+ *	Attr type:	Scalar
+ */
+	virtual void read_trigger_number(Tango::Attribute &attr);
+	virtual bool is_trigger_number_allowed(Tango::AttReqType type);
 /**
  *	Attribute CH0_Timestamps related methods
  *	Description: 

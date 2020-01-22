@@ -629,6 +629,22 @@ bool XTDC4::is_bin_size_allowed(TANGO_UNUSED(Tango::AttReqType type))
 
 //--------------------------------------------------------
 /**
+ *	Method      : XTDC4::is_trigger_number_allowed()
+ *	Description : Execution allowed for trigger_number attribute
+ */
+//--------------------------------------------------------
+bool XTDC4::is_trigger_number_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for trigger_number attribute in read access.
+	/*----- PROTECTED REGION ID(XTDC4::trigger_numberStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::trigger_numberStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
  *	Method      : XTDC4::is_CH0_Timestamps_allowed()
  *	Description : Execution allowed for CH0_Timestamps attribute
  */

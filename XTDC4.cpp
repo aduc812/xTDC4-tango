@@ -105,6 +105,7 @@ static const char *RcsId = "$Id:  $";
 //  driver_version                     |  Tango::DevLong	Scalar
 //  board_serial                       |  Tango::DevLong	Scalar
 //  bin_size                           |  Tango::DevDouble	Scalar
+//  trigger_number                     |  Tango::DevULong64	Scalar
 //  CH0_Timestamps                     |  Tango::DevULong64	Spectrum  ( max = 1400000)
 //  CH1_Timestamps                     |  Tango::DevULong64	Spectrum  ( max = 1400000)
 //  CH2_Timestamps                     |  Tango::DevULong64	Spectrum  ( max = 1400000)
@@ -126,7 +127,7 @@ int bTerminatePolingThread;
 std::thread * poller_thread_ref;
 __int64 run_timeout_ticks;
 __int64 first_start_timestamp;
-
+unsigned long start_counter;
 /*----- PROTECTED REGION END -----*/	//	XTDC4::namespace_starting
 
 //--------------------------------------------------------
@@ -227,6 +228,7 @@ void XTDC4::delete_device()
 	delete[] attr_driver_version_read;
 	delete[] attr_board_serial_read;
 	delete[] attr_bin_size_read;
+	delete[] attr_trigger_number_read;
 	delete[] attr_CH0_Timestamps_read;
 	delete[] attr_CH1_Timestamps_read;
 	delete[] attr_CH2_Timestamps_read;
@@ -283,6 +285,7 @@ void XTDC4::init_device()
 	attr_driver_version_read = new Tango::DevLong[1];
 	attr_board_serial_read = new Tango::DevLong[1];
 	attr_bin_size_read = new Tango::DevDouble[1];
+	attr_trigger_number_read = new Tango::DevULong64[1];
 	attr_CH0_Timestamps_read = new Tango::DevULong64[1400000];
 	attr_CH1_Timestamps_read = new Tango::DevULong64[1400000];
 	attr_CH2_Timestamps_read = new Tango::DevULong64[1400000];
@@ -360,6 +363,10 @@ void XTDC4::init_device()
 	xtdc4_get_param_info(this_device_ref, &p_info);
 	attr_bin_size_read[0] = p_info.binsize;
 
+	attr_trigger_number_read[0] = 0;
+	start_counter = 0;
+
+	set_change_event("trigger_number", true);
 	set_change_event("CH0_Timestamps",true);
 	set_change_event("CH1_Timestamps", true);
 	set_change_event("CH2_Timestamps", true);
@@ -1484,6 +1491,24 @@ void XTDC4::read_bin_size(Tango::Attribute &attr)
 }
 //--------------------------------------------------------
 /**
+ *	Read attribute trigger_number related method
+ *	Description: The number of a event trigger. Increments every time an event is pushed on CHx_Timestamps attributes. Increments by 1000000 with every Start() call.
+ *
+ *	Data type:	Tango::DevULong64
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void XTDC4::read_trigger_number(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "XTDC4::read_trigger_number(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(XTDC4::read_trigger_number) ENABLED START -----*/
+	//	Set the attribute value
+	attr.set_value(attr_trigger_number_read);
+	
+	/*----- PROTECTED REGION END -----*/	//	XTDC4::read_trigger_number
+}
+//--------------------------------------------------------
+/**
  *	Read attribute CH0_Timestamps related method
  *	Description: 
  *
@@ -1612,6 +1637,9 @@ void XTDC4::start()
 	attr_last_run_empty_starts_read[0] = 0;
 	attr_last_run_hits_read[0] = 0;
 	attr_last_run_start_errors_read[0] = 0;
+
+	start_counter += 1;
+	attr_trigger_number_read[0] = start_counter*1000000;
 
 	first_start_timestamp = -1;
 	
@@ -2067,6 +2095,8 @@ void XTDC4::flush_timestamps_as_event()
 		prepare_channel_timestamps_to_send(ctr, *(attr_ptrs[ctr]), &nTimestamps);
 		if (nTimestamps)
 		{
+			push_change_event("trigger_number", attr_trigger_number_read,1);
+			attr_trigger_number_read[0]++;
 			push_change_event(attr_names[ctr], *(attr_ptrs[ctr]), nTimestamps);
 		}
 	}

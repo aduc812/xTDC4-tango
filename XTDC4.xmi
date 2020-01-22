@@ -341,6 +341,15 @@
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
       <properties description="Bin size (in ps) of the measured TDC data. The TDC main clock is running at&#xA;a frequency of 76.8 GHz resulting in a bin size of about 13.0208ps." label="" unit="" standardUnit="ps" displayUnit="" format="" maxValue="" minValue="" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
     </attributes>
+    <attributes name="trigger_number" attType="Scalar" rwType="READ" displayLevel="OPERATOR" polledPeriod="0" maxX="" maxY="" allocReadMember="true" isDynamic="false">
+      <dataType xsi:type="pogoDsl:ULongType"/>
+      <changeEvent fire="true" libCheckCriteria="false"/>
+      <archiveEvent fire="false" libCheckCriteria="false"/>
+      <dataReadyEvent fire="false" libCheckCriteria="true"/>
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+      <properties description="The number of a event trigger. Increments every time an event is pushed on CHx_Timestamps attributes. Increments by 1000000 with every Start() call." label="" unit="" standardUnit="" displayUnit="" format="" maxValue="" minValue="" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
+      <eventCriteria relChange="" absChange="1" period=""/>
+    </attributes>
     <attributes name="CH0_Timestamps" attType="Spectrum" rwType="READ" displayLevel="OPERATOR" polledPeriod="0" maxX="1400000" maxY="" allocReadMember="true" isDynamic="false">
       <dataType xsi:type="pogoDsl:ULongType"/>
       <changeEvent fire="false" libCheckCriteria="false"/>
@@ -348,6 +357,7 @@
       <dataReadyEvent fire="true" libCheckCriteria="true"/>
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
       <properties description="" label="" unit="" standardUnit="" displayUnit="" format="" maxValue="" minValue="" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
+      <eventCriteria relChange="" absChange="1" period=""/>
     </attributes>
     <attributes name="CH1_Timestamps" attType="Spectrum" rwType="READ" displayLevel="OPERATOR" polledPeriod="0" maxX="1400000" maxY="" allocReadMember="true" isDynamic="false">
       <dataType xsi:type="pogoDsl:ULongType"/>
@@ -356,6 +366,7 @@
       <dataReadyEvent fire="true" libCheckCriteria="true"/>
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
       <properties description="" label="" unit="" standardUnit="" displayUnit="" format="" maxValue="" minValue="" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
+      <eventCriteria relChange="" absChange="1" period=""/>
     </attributes>
     <attributes name="CH2_Timestamps" attType="Spectrum" rwType="READ" displayLevel="OPERATOR" polledPeriod="0" maxX="1400000" maxY="" allocReadMember="true" isDynamic="false">
       <dataType xsi:type="pogoDsl:ULongType"/>
@@ -364,6 +375,7 @@
       <dataReadyEvent fire="true" libCheckCriteria="true"/>
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
       <properties description="" label="" unit="" standardUnit="" displayUnit="" format="" maxValue="" minValue="" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
+      <eventCriteria relChange="" absChange="1" period=""/>
     </attributes>
     <attributes name="CH3_Timestamps" attType="Spectrum" rwType="READ" displayLevel="OPERATOR" polledPeriod="0" maxX="1400000" maxY="" allocReadMember="true" isDynamic="false">
       <dataType xsi:type="pogoDsl:ULongType"/>
@@ -372,6 +384,7 @@
       <dataReadyEvent fire="true" libCheckCriteria="true"/>
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
       <properties description="" label="" unit="" standardUnit="" displayUnit="" format="" maxValue="" minValue="" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
+      <eventCriteria relChange="" absChange="1" period=""/>
     </attributes>
     <states name="ON" description="">
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>

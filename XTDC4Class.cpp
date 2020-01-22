@@ -1353,6 +1353,32 @@ void XTDC4Class::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	Not Memorized
 	att_list.push_back(bin_size);
 
+	//	Attribute : trigger_number
+	trigger_numberAttrib	*trigger_number = new trigger_numberAttrib();
+	Tango::UserDefaultAttrProp	trigger_number_prop;
+	trigger_number_prop.set_description("The number of a event trigger. Increments every time an event is pushed on CHx_Timestamps attributes. Increments by 1000000 with every Start() call.");
+	//	label	not set for trigger_number
+	//	unit	not set for trigger_number
+	//	standard_unit	not set for trigger_number
+	//	display_unit	not set for trigger_number
+	//	format	not set for trigger_number
+	//	max_value	not set for trigger_number
+	//	min_value	not set for trigger_number
+	//	max_alarm	not set for trigger_number
+	//	min_alarm	not set for trigger_number
+	//	max_warning	not set for trigger_number
+	//	min_warning	not set for trigger_number
+	//	delta_t	not set for trigger_number
+	//	delta_val	not set for trigger_number
+	trigger_number_prop.set_event_abs_change("1");
+	
+	trigger_number->set_default_properties(trigger_number_prop);
+	//	Not Polled
+	trigger_number->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	trigger_number->set_change_event(true, false);
+	att_list.push_back(trigger_number);
+
 	//	Attribute : CH0_Timestamps
 	CH0_TimestampsAttrib	*ch0_timestamps = new CH0_TimestampsAttrib();
 	Tango::UserDefaultAttrProp	ch0_timestamps_prop;
@@ -1370,6 +1396,7 @@ void XTDC4Class::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	min_warning	not set for CH0_Timestamps
 	//	delta_t	not set for CH0_Timestamps
 	//	delta_val	not set for CH0_Timestamps
+	ch0_timestamps_prop.set_event_abs_change("1");
 	
 	ch0_timestamps->set_default_properties(ch0_timestamps_prop);
 	//	Not Polled
@@ -1395,6 +1422,7 @@ void XTDC4Class::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	min_warning	not set for CH1_Timestamps
 	//	delta_t	not set for CH1_Timestamps
 	//	delta_val	not set for CH1_Timestamps
+	ch1_timestamps_prop.set_event_abs_change("1");
 	
 	ch1_timestamps->set_default_properties(ch1_timestamps_prop);
 	//	Not Polled
@@ -1420,6 +1448,7 @@ void XTDC4Class::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	min_warning	not set for CH2_Timestamps
 	//	delta_t	not set for CH2_Timestamps
 	//	delta_val	not set for CH2_Timestamps
+	ch2_timestamps_prop.set_event_abs_change("1");
 	
 	ch2_timestamps->set_default_properties(ch2_timestamps_prop);
 	//	Not Polled
@@ -1445,6 +1474,7 @@ void XTDC4Class::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	min_warning	not set for CH3_Timestamps
 	//	delta_t	not set for CH3_Timestamps
 	//	delta_val	not set for CH3_Timestamps
+	ch3_timestamps_prop.set_event_abs_change("1");
 	
 	ch3_timestamps->set_default_properties(ch3_timestamps_prop);
 	//	Not Polled

@@ -500,6 +500,19 @@ public:
 		{return (static_cast<XTDC4 *>(dev))->is_bin_size_allowed(ty);}
 };
 
+//	Attribute trigger_number class definition
+class trigger_numberAttrib: public Tango::Attr
+{
+public:
+	trigger_numberAttrib():Attr("trigger_number",
+			Tango::DEV_ULONG64, Tango::READ) {};
+	~trigger_numberAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<XTDC4 *>(dev))->read_trigger_number(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<XTDC4 *>(dev))->is_trigger_number_allowed(ty);}
+};
+
 //	Attribute CH0_Timestamps class definition
 class CH0_TimestampsAttrib: public Tango::SpectrumAttr
 {
