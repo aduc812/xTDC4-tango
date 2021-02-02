@@ -43,7 +43,7 @@ CommThread.obj: CommThread.cpp $(HEADER)
 
 clean:
 	del /Q $(OBJS)
-	del /Q ATMotorController.exe
+	del /Q XTDC4.exe
 	
 MAJOR_VERS = 1
 MINOR_VERS = 0
