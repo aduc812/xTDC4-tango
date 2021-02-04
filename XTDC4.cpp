@@ -1888,8 +1888,8 @@ void XTDC4::poller_thread()
 			unsigned char package_error_flags_mask = 0x3E;	// TODO:
 			unsigned char hit_error_flags_mask = 0xC0;		// These parameters should not be hardcoded?
 						
-			crono_packet **first_packet = &read_data.first_packet;
-			crono_packet **last_packet = &read_data.last_packet;
+			volatile crono_packet **first_packet = &read_data.first_packet;
+			volatile crono_packet **last_packet = &read_data.last_packet;
 
 			//check the length of data read
 			if ((last_packet - first_packet) > 16000000) // this is an insurance against something bad happening in memory, like first_packet>last_packet.
@@ -1914,7 +1914,7 @@ void XTDC4::poller_thread()
 			while ((*first_packet) <= (*last_packet))
 			{
 				int bPacketInvalid = 0;
-				crono_packet *p = *first_packet;
+				volatile crono_packet *p = *first_packet;
 				if (first_start_timestamp == -1)
 				{
 					first_start_timestamp = p->timestamp;
